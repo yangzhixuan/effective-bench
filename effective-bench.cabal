@@ -1,0 +1,190 @@
+cabal-version: 3.0
+name:          effective-bench
+version:       0.1.0.0
+synopsis:      Benchmarks for Haskell effect handler libraries
+description:
+    A benchmark for comparing Haskell effect handler libraries.
+    The test cases are adapted from [heftia-effects](https://github.com/sayo-hs/heftia/tree/master/benchmark)
+    but with `O2` enabled and `NOINLINE` pragrams removed.
+    Each testcase/library implementation lives in its own module so GHC
+    compiles it separately to make sure that each library receives the
+    same simplification ticks.
+license:       BSD-3-Clause
+license-file:  LICENSE
+author:        Zhixuan Yang, Nicolas Wu
+maintainer:    Zhixuan Yang, Nicolas Wu
+category:      Control
+build-type:    Simple
+
+extra-doc-files:
+    CHANGELOG.md
+
+tested-with: GHC == 9.8.4
+
+common warnings
+    ghc-options: -Wall
+
+common bench-common
+    default-language: GHC2021
+    default-extensions:
+        AllowAmbiguousTypes,
+        BlockArguments,
+        DataKinds,
+        LambdaCase,
+        PackageImports,
+        PartialTypeSignatures,
+        TemplateHaskell,
+        MonoLocalBinds,
+        TypeApplications
+    ghc-options:
+        -Wall
+        -O2
+        -rtsopts
+        -threaded
+        -fconstraint-solver-iterations=16
+        -Wno-partial-type-signatures
+    build-depends:
+        base ^>= 4.19.2.0,
+        tasty-bench >= 0.3 && < 0.5
+
+common bench-common-o0
+    default-language: GHC2021
+    default-extensions:
+        AllowAmbiguousTypes,
+        BlockArguments,
+        DataKinds,
+        LambdaCase,
+        PackageImports,
+        PartialTypeSignatures,
+        TemplateHaskell,
+        MonoLocalBinds,
+        TypeApplications
+    ghc-options:
+        -Wall
+        -O0
+        -rtsopts
+        -threaded
+        -fconstraint-solver-iterations=16
+        -Wno-partial-type-signatures
+    build-depends:
+        base ^>= 4.19.2.0,
+        tasty-bench >= 0.3 && < 0.5
+
+common bench-heftia
+    build-depends:
+        data-effects ^>= 0.4.2,
+        heftia-effects ^>= 0.7
+
+common bench-freer-simple
+    build-depends:
+        freer-simple ^>= 1.2
+
+common bench-polysemy
+    build-depends:
+        polysemy ^>= 1.9
+
+common bench-fused-effects
+    build-depends:
+        fused-effects ^>= 1.1
+
+common bench-effectful
+    build-depends:
+        effectful >= 2.3 && < 2.6
+
+common bench-eff
+    build-depends:
+        eff
+
+common bench-mpeff
+    build-depends:
+        mpeff ^>= 0.1
+
+common bench-mtl
+    build-depends:
+        mtl >= 2.2 && < 2.4
+
+common bench-logict
+    build-depends:
+        logict >= 0.7.0.3 && < 0.9
+
+benchmark with-o2
+    import:         bench-common, bench-heftia, bench-freer-simple, bench-polysemy, bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl, bench-logict
+    type:           exitcode-stdio-1.0
+    hs-source-dirs: bench
+    main-is:        Main.hs
+    other-modules:
+        Bench.Mpeff
+        Bench.Catch.Eff
+        Bench.Catch.Effectful
+        Bench.Catch.FusedEffects
+        Bench.Catch.Heftia
+        Bench.Catch.Mpeff.Safe
+        Bench.Catch.Mpeff.Unsafe
+        Bench.Catch.Mtl
+        Bench.Catch.Polysemy
+        Bench.Countdown.Eff
+        Bench.Countdown.Effectful
+        Bench.Countdown.FreerSimple
+        Bench.Countdown.FusedEffects
+        Bench.Countdown.Heftia
+        Bench.Countdown.Mpeff.Safe
+        Bench.Countdown.Mpeff.Unsafe
+        Bench.Countdown.Mtl
+        Bench.Countdown.Polysemy
+        Bench.Local.Effectful
+        Bench.Local.Eff
+        Bench.Local.FusedEffects
+        Bench.Local.Heftia
+        Bench.Local.Mpeff.Safe
+        Bench.Local.Mpeff.Unsafe
+        Bench.Local.Mtl
+        Bench.Local.Polysemy
+        Bench.Nondet.Eff
+        Bench.Nondet.FreerSimple
+        Bench.Nondet.FusedEffects
+        Bench.Nondet.Heftia
+        Bench.Nondet.Mpeff.Safe
+        Bench.Nondet.Mpeff.Unsafe
+        Bench.Nondet.MtlLogict
+        Bench.Nondet.Polysemy
+
+benchmark with-o0
+    import:         bench-common-o0, bench-heftia, bench-freer-simple, bench-polysemy, bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl, bench-logict
+    type:           exitcode-stdio-1.0
+    hs-source-dirs: bench
+    main-is:        Main.hs
+    other-modules:
+        Bench.Mpeff
+        Bench.Catch.Eff
+        Bench.Catch.Effectful
+        Bench.Catch.FusedEffects
+        Bench.Catch.Heftia
+        Bench.Catch.Mpeff.Safe
+        Bench.Catch.Mpeff.Unsafe
+        Bench.Catch.Mtl
+        Bench.Catch.Polysemy
+        Bench.Countdown.Eff
+        Bench.Countdown.Effectful
+        Bench.Countdown.FreerSimple
+        Bench.Countdown.FusedEffects
+        Bench.Countdown.Heftia
+        Bench.Countdown.Mpeff.Safe
+        Bench.Countdown.Mpeff.Unsafe
+        Bench.Countdown.Mtl
+        Bench.Countdown.Polysemy
+        Bench.Local.Effectful
+        Bench.Local.Eff
+        Bench.Local.FusedEffects
+        Bench.Local.Heftia
+        Bench.Local.Mpeff.Safe
+        Bench.Local.Mpeff.Unsafe
+        Bench.Local.Mtl
+        Bench.Local.Polysemy
+        Bench.Nondet.Eff
+        Bench.Nondet.FreerSimple
+        Bench.Nondet.FusedEffects
+        Bench.Nondet.Heftia
+        Bench.Nondet.Mpeff.Safe
+        Bench.Nondet.Mpeff.Unsafe
+        Bench.Nondet.MtlLogict
+        Bench.Nondet.Polysemy
