@@ -147,6 +147,7 @@ benchmark with-o2
         Bench.Catch.Effective
         --
         Bench.Countdown.Eff
+        Bench.Countdown.Effective
         Bench.Countdown.Effectful
         Bench.Countdown.FreerSimple
         Bench.Countdown.FusedEffects
@@ -159,6 +160,7 @@ benchmark with-o2
         --
         Bench.Local.Effectful
         Bench.Local.Eff
+        Bench.Local.Effective
         Bench.Local.FreerSimple
         Bench.Local.FusedEffects
         Bench.Local.Handrolled
@@ -169,6 +171,7 @@ benchmark with-o2
         Bench.Local.Polysemy
         --
         Bench.Nondet.Eff
+        Bench.Nondet.Effective
         Bench.Nondet.FreerSimple
         Bench.Nondet.FusedEffects
         Bench.Nondet.HandrolledListT
@@ -204,6 +207,7 @@ benchmark with-o0
         Bench.Catch.Effective
         --
         Bench.Countdown.Eff
+        Bench.Countdown.Effective
         Bench.Countdown.Effectful
         Bench.Countdown.FreerSimple
         Bench.Countdown.FusedEffects
@@ -216,6 +220,7 @@ benchmark with-o0
         --
         Bench.Local.Effectful
         Bench.Local.Eff
+        Bench.Local.Effective
         Bench.Local.FreerSimple
         Bench.Local.FusedEffects
         Bench.Local.Handrolled
@@ -226,6 +231,7 @@ benchmark with-o0
         Bench.Local.Polysemy
         --
         Bench.Nondet.Eff
+        Bench.Nondet.Effective
         Bench.Nondet.FreerSimple
         Bench.Nondet.FusedEffects
         Bench.Nondet.HandrolledListT

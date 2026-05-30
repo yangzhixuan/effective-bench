@@ -13,6 +13,7 @@ import Bench.Catch.Effective qualified as CatchEffective
 import Bench.Catch.Handrolled qualified as CatchHandrolled
 import Bench.Countdown.Handrolled qualified as CountdownHandrolled
 import Bench.Countdown.Eff qualified as CountdownEff
+import Bench.Countdown.Effective qualified as CountdownEffective
 import Bench.Countdown.Effectful qualified as CountdownEffectful
 import Bench.Countdown.FreerSimple qualified as CountdownFreer
 import Bench.Countdown.FusedEffects qualified as CountdownFused
@@ -23,6 +24,7 @@ import Bench.Countdown.Mtl qualified as CountdownMtl
 import Bench.Countdown.Polysemy qualified as CountdownPolysemy
 import Bench.Local.Effectful qualified as LocalEffectful
 import Bench.Local.Eff qualified as LocalEff
+import Bench.Local.Effective qualified as LocalEffective
 import Bench.Local.FreerSimple qualified as LocalFreer
 import Bench.Local.FusedEffects qualified as LocalFused
 import Bench.Local.Handrolled qualified as LocalHandrolled
@@ -32,6 +34,7 @@ import Bench.Local.Mpeff.Unsafe qualified as LocalMpeff
 import Bench.Local.Mtl qualified as LocalMtl
 import Bench.Local.Polysemy qualified as LocalPolysemy
 import Bench.Nondet.Eff qualified as NondetEff
+import Bench.Nondet.Effective qualified as NondetEffective
 import Bench.Nondet.FreerSimple qualified as NondetFreer
 import Bench.Nondet.FusedEffects qualified as NondetFused
 import Bench.Nondet.HandrolledListT qualified as NondetHandrolledListT
@@ -58,6 +61,7 @@ main =
                     , bench "fused" $ nf CountdownFused.countdown x
                     , bench "effectful" $ nf CountdownEffectful.countdown x
                     , bench "eff" $ nf CountdownEff.countdown x
+                    , bench "effective" $ nf CountdownEffective.countdown x
                     , bench "mp" $ nf CountdownMpeff.countdown x
                     , bench "mp.safe" $ nf CountdownMpeffSafe.countdown x
                     , bench "mtl" $ nf CountdownMtl.countdown x
@@ -74,6 +78,7 @@ main =
                     , bench "fused" $ nf CountdownFused.countdownDeep x
                     , bench "effectful" $ nf CountdownEffectful.countdownDeep x
                     , bench "eff" $ nf CountdownEff.countdownDeep x
+                    , bench "effective" $ nf CountdownEffective.countdownDeep x
                     , bench "mp" $ nf CountdownMpeff.countdownDeep x
                     , bench "mp.safe" $ nf CountdownMpeffSafe.countdownDeep x
                     , bench "mtl" $ nf CountdownMtl.countdownDeep x
@@ -124,10 +129,10 @@ main =
                     , bench "fused" $ nf LocalFused.localBench x
                     , bench "effectful" $ nf LocalEffectful.localBench x
                     , bench "eff" $ nf LocalEff.localBench x
+                    , bench "effective" $ nf LocalEffective.localBench x
                     , bench "mp" $ nf LocalMpeff.localBench x
                     , bench "mp.safe" $ nf LocalMpeffSafe.localBench x
                     , bench "mtl" $ nf LocalMtl.localBench x
-                    , bench "effective" $ nf CatchEffective.catchDeep x
                     , bench "handrolled" $ nf LocalHandrolled.localShallow x
                     ]
 
@@ -141,6 +146,7 @@ main =
                     , bench "fused" $ nf LocalFused.localDeep x
                     , bench "effectful" $ nf LocalEffectful.localDeep x
                     , bench "eff" $ nf LocalEff.localDeep x
+                    , bench "effective" $ nf LocalEffective.localDeep x
                     , bench "mp" $ nf LocalMpeff.localDeep x
                     , bench "mp.safe" $ nf LocalMpeffSafe.localDeep x
                     , bench "mtl" $ nf LocalMtl.localDeep x
@@ -156,6 +162,7 @@ main =
                     , bench "polysemy" $ nf NondetPolysemy.pyth x
                     , bench "fused" $ nf NondetFused.pyth x
                     , bench "eff" $ nf NondetEff.pyth x
+                    , bench "effective" $ nf NondetEffective.pyth x
                     , bench "mp" $ nf NondetMpeff.pyth x
                     , bench "mp.safe" $ nf NondetMpeffSafe.pyth x
                     , bench "mtl.listt" $ nf NondetListT.pyth x
@@ -173,6 +180,7 @@ main =
                     , bench "polysemy" $ nf NondetPolysemy.pythDeep x
                     , bench "fused" $ nf NondetFused.pythDeep x
                     , bench "eff" $ nf NondetEff.pythDeep x
+                    , bench "effective" $ nf NondetEffective.pythDeep x
                     , bench "mp" $ nf NondetMpeff.pythDeep x
                     , bench "mp.safe" $ nf NondetMpeffSafe.pythDeep x
                     , bench "mtl.listt" $ nf NondetListT.pythDeep x
