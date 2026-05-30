@@ -123,10 +123,14 @@ common bench-effective
     build-depends:
         effective
 
+common bench-effective-naive
+    build-depends:
+        effective-naive
+
 benchmark with-o2
     import:         bench-common, bench-heftia, bench-freer-simple, bench-polysemy,
                     bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl,
-                    bench-logict, bench-list-t, bench-handrolled, bench-effective
+                    bench-logict, bench-list-t, bench-handrolled, bench-effective, bench-effective-naive
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
@@ -145,9 +149,11 @@ benchmark with-o2
         Bench.Catch.Polysemy
         Bench.Catch.Handrolled
         Bench.Catch.Effective
+        Bench.Catch.EffectiveNaive
         --
         Bench.Countdown.Eff
         Bench.Countdown.Effective
+        Bench.Countdown.EffectiveNaive
         Bench.Countdown.Effectful
         Bench.Countdown.FreerSimple
         Bench.Countdown.FusedEffects
@@ -161,6 +167,7 @@ benchmark with-o2
         Bench.Local.Effectful
         Bench.Local.Eff
         Bench.Local.Effective
+        Bench.Local.EffectiveNaive
         Bench.Local.FreerSimple
         Bench.Local.FusedEffects
         Bench.Local.Handrolled
@@ -172,6 +179,7 @@ benchmark with-o2
         --
         Bench.Nondet.Eff
         Bench.Nondet.Effective
+        Bench.Nondet.EffectiveNaive
         Bench.Nondet.FreerSimple
         Bench.Nondet.FusedEffects
         Bench.Nondet.HandrolledListT
@@ -186,7 +194,7 @@ benchmark with-o2
 benchmark with-o0
     import:         bench-common-o0, bench-heftia, bench-freer-simple, bench-polysemy,
                     bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl,
-                    bench-logict, bench-list-t, bench-handrolled, bench-effective
+                    bench-logict, bench-list-t, bench-handrolled, bench-effective, bench-effective-naive
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
@@ -205,9 +213,11 @@ benchmark with-o0
         Bench.Catch.Polysemy
         Bench.Catch.Handrolled
         Bench.Catch.Effective
+        Bench.Catch.EffectiveNaive
         --
         Bench.Countdown.Eff
         Bench.Countdown.Effective
+        Bench.Countdown.EffectiveNaive
         Bench.Countdown.Effectful
         Bench.Countdown.FreerSimple
         Bench.Countdown.FusedEffects
@@ -221,6 +231,7 @@ benchmark with-o0
         Bench.Local.Effectful
         Bench.Local.Eff
         Bench.Local.Effective
+        Bench.Local.EffectiveNaive
         Bench.Local.FreerSimple
         Bench.Local.FusedEffects
         Bench.Local.Handrolled
@@ -232,6 +243,7 @@ benchmark with-o0
         --
         Bench.Nondet.Eff
         Bench.Nondet.Effective
+        Bench.Nondet.EffectiveNaive
         Bench.Nondet.FreerSimple
         Bench.Nondet.FusedEffects
         Bench.Nondet.HandrolledListT

@@ -1,9 +1,9 @@
-module Bench.Nondet.Effective (pyth, pythDeep) where
+module Bench.Nondet.EffectiveNaive (pyth, pythDeep) where
 
-import "effective" Control.Effect
-import "effective" Control.Effect.Nondet.Logic
-import "effective" Control.Effect.Alternative
-import "effective" Control.Effect.Reader
+import "effective-naive" Control.Effect
+import "effective-naive" Control.Effect.Nondet.Logic
+import "effective-naive" Control.Effect.Alternative
+import "effective-naive" Control.Effect.Reader
 
 program :: Int -> (Int, Int, Int) ! '[Empty, Choose]
 program upbound = do
