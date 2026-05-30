@@ -121,6 +121,7 @@ benchmark with-o2
         Bench.Mpeff
         Bench.Catch.Eff
         Bench.Catch.Effectful
+        Bench.Catch.FreerSimple
         Bench.Catch.FusedEffects
         Bench.Catch.Heftia
         Bench.Catch.Mpeff.Safe
@@ -138,6 +139,7 @@ benchmark with-o2
         Bench.Countdown.Polysemy
         Bench.Local.Effectful
         Bench.Local.Eff
+        Bench.Local.FreerSimple
         Bench.Local.FusedEffects
         Bench.Local.Heftia
         Bench.Local.Mpeff.Safe
@@ -163,6 +165,7 @@ benchmark with-o0
         Bench.Mpeff
         Bench.Catch.Eff
         Bench.Catch.Effectful
+        Bench.Catch.FreerSimple
         Bench.Catch.FusedEffects
         Bench.Catch.Heftia
         Bench.Catch.Mpeff.Safe
@@ -180,6 +183,7 @@ benchmark with-o0
         Bench.Countdown.Polysemy
         Bench.Local.Effectful
         Bench.Local.Eff
+        Bench.Local.FreerSimple
         Bench.Local.FusedEffects
         Bench.Local.Heftia
         Bench.Local.Mpeff.Safe

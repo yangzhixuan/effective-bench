@@ -2,6 +2,7 @@ module Main (main) where
 
 import Bench.Catch.Eff qualified as CatchEff
 import Bench.Catch.Effectful qualified as CatchEffectful
+import Bench.Catch.FreerSimple qualified as CatchFreer
 import Bench.Catch.FusedEffects qualified as CatchFused
 import Bench.Catch.Heftia qualified as CatchHeftia
 import Bench.Catch.Mpeff.Safe qualified as CatchMpeffSafe
@@ -19,6 +20,7 @@ import Bench.Countdown.Mtl qualified as CountdownMtl
 import Bench.Countdown.Polysemy qualified as CountdownPolysemy
 import Bench.Local.Effectful qualified as LocalEffectful
 import Bench.Local.Eff qualified as LocalEff
+import Bench.Local.FreerSimple qualified as LocalFreer
 import Bench.Local.FusedEffects qualified as LocalFused
 import Bench.Local.Heftia qualified as LocalHeftia
 import Bench.Local.Mpeff.Safe qualified as LocalMpeffSafe
@@ -74,6 +76,7 @@ main =
                 bgroup
                     (show x)
                     [ bench "heftia" $ nf CatchHeftia.catchBench x
+                    , bench "freer" $ nf CatchFreer.catchBench x
                     , bench "polysemy" $ nf CatchPolysemy.catchBench x
                     , bench "fused" $ nf CatchFused.catchBench x
                     , bench "effectful" $ nf CatchEffectful.catchBench x
@@ -88,6 +91,7 @@ main =
                 bgroup
                     (show x)
                     [ bench "heftia.5+5" $ nf CatchHeftia.catchDeep x
+                    , bench "freer.5+5" $ nf CatchFreer.catchDeep x
                     , bench "polysemy.5+5" $ nf CatchPolysemy.catchDeep x
                     , bench "fused.5+5" $ nf CatchFused.catchDeep x
                     , bench "effectful.5+5" $ nf CatchEffectful.catchDeep x
@@ -102,6 +106,7 @@ main =
                 bgroup
                     (show x)
                     [ bench "heftia" $ nf LocalHeftia.localBench x
+                    , bench "freer" $ nf LocalFreer.localBench x
                     , bench "polysemy" $ nf LocalPolysemy.localBench x
                     , bench "fused" $ nf LocalFused.localBench x
                     , bench "effectful" $ nf LocalEffectful.localBench x
@@ -116,6 +121,7 @@ main =
                 bgroup
                     (show x)
                     [ bench "heftia.5+5" $ nf LocalHeftia.localDeep x
+                    , bench "freer.5+5" $ nf LocalFreer.localDeep x
                     , bench "polysemy.5+5" $ nf LocalPolysemy.localDeep x
                     , bench "fused.5+5" $ nf LocalFused.localDeep x
                     , bench "effectful.5+5" $ nf LocalEffectful.localDeep x
@@ -148,8 +154,8 @@ main =
                     , bench "polysemy.5+5" $ nf NondetPolysemy.pythDeep x
                     , bench "fused.5+5" $ nf NondetFused.pythDeep x
                     , bench "eff.5+5" $ nf NondetEff.pythDeep x
-                    -- , bench "mp.5+5" $ nf NondetMpeff.pythDeep x
-                    -- , bench "mp.safe.5+5" $ nf NondetMpeffSafe.pythDeep x
+                    , bench "mp.5+5" $ nf NondetMpeff.pythDeep x
+                    , bench "mp.safe.5+5" $ nf NondetMpeffSafe.pythDeep x
                     , bench "mtl-logict.5+5" $ nf NondetLogict.pythDeep x
                     ]
 
