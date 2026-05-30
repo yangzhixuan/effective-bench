@@ -44,9 +44,10 @@ common bench-common
         -threaded
         -fconstraint-solver-iterations=16
         -Wno-partial-type-signatures
+        -dcore-lint
     build-depends:
-        base ^>= 4.19.2.0,
-        tasty-bench >= 0.3 && < 0.5
+        base == 4.19.2.0,
+        tasty-bench == 0.4.1
 
 common bench-common-o0
     default-language: GHC2021
@@ -68,46 +69,47 @@ common bench-common-o0
         -threaded
         -fconstraint-solver-iterations=16
         -Wno-partial-type-signatures
+        -dcore-lint
     build-depends:
-        base ^>= 4.19.2.0,
-        tasty-bench >= 0.3 && < 0.5
+        base == 4.19.2.0,
+        tasty-bench == 0.4.1
 
 common bench-heftia
     build-depends:
-        data-effects ^>= 0.4.2,
-        heftia-effects ^>= 0.7
+        data-effects == 0.4.2.0,
+        heftia-effects == 0.7.0.0
 
 common bench-freer-simple
     build-depends:
-        freer-simple ^>= 1.2
+        freer-simple == 1.2.1.2
 
 common bench-polysemy
     build-depends:
-        polysemy ^>= 1.9
+        polysemy == 1.9.2.0
 
 common bench-fused-effects
     build-depends:
-        fused-effects ^>= 1.1
+        fused-effects == 1.1.2.7
 
 common bench-effectful
     build-depends:
-        effectful >= 2.3 && < 2.6
+        effectful == 2.5.1.0
 
 common bench-eff
     build-depends:
-        eff
+        eff == 0.0.0.0
 
 common bench-mpeff
     build-depends:
-        mpeff ^>= 0.1
+        mpeff == 0.1.0.0
 
 common bench-mtl
     build-depends:
-        mtl >= 2.2 && < 2.4
+        mtl == 2.3.1
 
 common bench-logict
     build-depends:
-        logict >= 0.7.0.3 && < 0.9
+        logict == 0.8.2.0
 
 benchmark with-o2
     import:         bench-common, bench-heftia, bench-freer-simple, bench-polysemy, bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl, bench-logict
