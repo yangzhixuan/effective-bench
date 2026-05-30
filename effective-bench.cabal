@@ -111,8 +111,12 @@ common bench-logict
     build-depends:
         logict == 0.8.2.0
 
+common bench-list-t
+    build-depends:
+        list-t == 1.0.5.7
+
 benchmark with-o2
-    import:         bench-common, bench-heftia, bench-freer-simple, bench-polysemy, bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl, bench-logict
+    import:         bench-common, bench-heftia, bench-freer-simple, bench-polysemy, bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl, bench-logict, bench-list-t
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
@@ -152,11 +156,12 @@ benchmark with-o2
         Bench.Nondet.Heftia
         Bench.Nondet.Mpeff.Safe
         Bench.Nondet.Mpeff.Unsafe
+        Bench.Nondet.MtlListT
         Bench.Nondet.MtlLogict
         Bench.Nondet.Polysemy
 
 benchmark with-o0
-    import:         bench-common-o0, bench-heftia, bench-freer-simple, bench-polysemy, bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl, bench-logict
+    import:         bench-common-o0, bench-heftia, bench-freer-simple, bench-polysemy, bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl, bench-logict, bench-list-t
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
@@ -196,5 +201,6 @@ benchmark with-o0
         Bench.Nondet.Heftia
         Bench.Nondet.Mpeff.Safe
         Bench.Nondet.Mpeff.Unsafe
+        Bench.Nondet.MtlListT
         Bench.Nondet.MtlLogict
         Bench.Nondet.Polysemy

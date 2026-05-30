@@ -33,6 +33,7 @@ import Bench.Nondet.FusedEffects qualified as NondetFused
 import Bench.Nondet.Heftia qualified as NondetHeftia
 import Bench.Nondet.Mpeff.Safe qualified as NondetMpeffSafe
 import Bench.Nondet.Mpeff.Unsafe qualified as NondetMpeff
+import Bench.Nondet.MtlListT qualified as NondetListT
 import Bench.Nondet.MtlLogict qualified as NondetLogict
 import Bench.Nondet.Polysemy qualified as NondetPolysemy
 import Data.Functor ((<&>))
@@ -142,6 +143,7 @@ main =
                     , bench "eff" $ nf NondetEff.pyth x
                     , bench "mp" $ nf NondetMpeff.pyth x
                     , bench "mp.safe" $ nf NondetMpeffSafe.pyth x
+                    , bench "mtl.listt" $ nf NondetListT.pyth x
                     , bench "mtl-logict" $ nf NondetLogict.pyth x
                     ]
 
@@ -156,6 +158,7 @@ main =
                     , bench "eff.5+5" $ nf NondetEff.pythDeep x
                     , bench "mp.5+5" $ nf NondetMpeff.pythDeep x
                     , bench "mp.safe.5+5" $ nf NondetMpeffSafe.pythDeep x
+                    , bench "mtl.listt.5+5" $ nf NondetListT.pythDeep x
                     , bench "mtl-logict.5+5" $ nf NondetLogict.pythDeep x
                     ]
 
