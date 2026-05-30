@@ -19,7 +19,7 @@ build-type:    Simple
 extra-doc-files:
     CHANGELOG.md
 
-tested-with: GHC == 9.8.4
+tested-with: GHC == 9.10.1
 
 common warnings
     ghc-options: -Wall
@@ -46,7 +46,7 @@ common bench-common
         -Wno-partial-type-signatures
         -dcore-lint
     build-depends:
-        base == 4.19.2.0,
+        base == 4.20.0.0,
         tasty-bench == 0.4.1
 
 common bench-common-o0
@@ -71,7 +71,7 @@ common bench-common-o0
         -Wno-partial-type-signatures
         -dcore-lint
     build-depends:
-        base == 4.19.2.0,
+        base == 4.20.0.0,
         tasty-bench == 0.4.1
 
 common bench-heftia

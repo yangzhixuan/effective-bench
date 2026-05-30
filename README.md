@@ -8,6 +8,20 @@ This benchmark suite was adapted from the benchmarking suite of [heftia-effects]
 
 4. The handlers for state and reader of `Mp.Eff` internally use `IORef` and `unsafePerformIO` to store the state. So we create a separate version where state are handled in the usual way as state-passing functions.
 
+5. The library `freer-simple` is slightly patched to work with GHC 9.10.1.
+
+  1. `freer-simple.cabal` is modified to allow the version of `template-haskell` that ships with GHC 9.10.1
+  2. Line 156 of `src/Control/Monad/Freer/Internal.hs` is changed from
+```
+instance (MonadBase b m, LastMember m effs) => MonadBase b (Eff effs) where
+```
+     to
+```
+instance (Monad b, MonadBase b m, LastMember m effs) => MonadBase b (Eff effs) where
+```
+It's not clear to me why GHC 9.10.1 can't see `MonadBase b m` already implies `Monad b`.
+
+
 TODO:
 
 1. Investigate why `countdown.deep` with `O0` for `mp.safe` is suspiciously fast.

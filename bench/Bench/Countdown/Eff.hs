@@ -14,4 +14,3 @@ countdownDeep :: Int -> (Int, Int)
 countdownDeep n = EF.run $ runR $ runR $ runR $ runR $ runR $ EF.runState n $ runR $ runR $ runR $ runR $ runR $ program
   where
     runR = EF.runReader ()
-

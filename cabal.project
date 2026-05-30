@@ -1,10 +1,8 @@
-with-compiler: ghc-9.8.4
-
-package *
-  optimization: 2
+with-compiler: ghc-9.10.1
 
 packages:
   .
+  vendor/freer-simple-1.2.1.2
 
 source-repository-package
   type: git
@@ -12,17 +10,12 @@ source-repository-package
   tag: a6ad3c7d7c62d21cf088af109ceb1d10a56b7125
   subdir: eff
 
-allow-newer: eff:primitive
-
-optimization: 2
-
 package *
   optimization: 2
+
+allow-newer:
+  eff:primitive
 
 package effective-bench
   tests: True
   benchmarks: True
-
-package heftia-effects
-  tests: False
-  benchmarks: False
