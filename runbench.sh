@@ -6,16 +6,26 @@ results_dir="results"
 tmp_dir="$results_dir/tmp"
 mkdir -p "$results_dir" "$tmp_dir"
 
+cleanup_separate_latex_tables() {
+    local table
+    local ext
+    for table in "$results_dir"/o{0,2}-{time,memory}{,-percent}; do
+        for ext in tex pdf; do
+            rm -f "$table.$ext"
+        done
+    done
+}
+
 csv_to_latex_tables() {
-    local input="$1"
-    local prefix="$2"
-    local caption="$3"
+    local o2_input="$1"
+    local o0_input="$2"
+    local output="$3"
 
     python3 -c '
 import csv
 import sys
 
-input_path, prefix, caption = sys.argv[1:]
+o2_input_path, o0_input_path, output_path = sys.argv[1:]
 
 def latex_escape(value):
     return (
@@ -47,6 +57,10 @@ def format_microseconds(picoseconds):
     value = float(picoseconds) / 1_000_000
     return f"{value:.3f}".rstrip("0").rstrip(".")
 
+def format_percent(value, best):
+    percent = value / best * 100
+    return f"{percent:.1f}\\%"
+
 def table_value(raw_value, display_value):
     return (float(raw_value), display_value)
 
@@ -59,70 +73,106 @@ def format_cell(value, best):
         return f"\\textbf{{{display_value}}}"
     return display_value
 
-def write_table(path, caption, tests, libraries, values):
-    with open(path, "w", newline="") as f:
-        f.write("\\documentclass[varwidth,border=2pt]{standalone}\n")
-        f.write("\\usepackage{booktabs}\n")
-        f.write("\\usepackage{graphicx}\n")
-        f.write("\\begin{document}\n")
-        f.write("\\begin{center}\n")
-        f.write(f"\\textbf{{{latex_escape(caption)}}}\n\n")
-        f.write("\\resizebox{\\textwidth}{!}{%\n")
-        f.write("\\begin{tabular}{l" + "r" * len(libraries) + "}\n")
-        f.write("\\toprule\n")
-        f.write("Test case & " + " & ".join(latex_escape(lib) for lib in libraries) + " \\\\\n")
-        f.write("\\midrule\n")
-        for test in tests:
-            row = [latex_escape(test)]
-            present_values = [values[(test, lib)][0] for lib in libraries if (test, lib) in values]
-            best = min(present_values) if present_values else None
-            row.extend(format_cell(values.get((test, lib)), best) for lib in libraries)
-            f.write(" & ".join(row) + " \\\\\n")
-        f.write("\\bottomrule\n")
-        f.write("\\end{tabular}\n")
-        f.write("}\n")
-        f.write("\\end{center}\n")
-        f.write("\\end{document}\n")
+def format_absolute_cell(value, best):
+    return format_cell(value, best)
 
-with open(input_path, newline="") as f:
-    rows = list(csv.DictReader(f))
+def format_relative_cell(value, best):
+    if value is None:
+        return "--"
 
-tests = []
-libraries = []
-time_values = {}
-memory_values = {}
+    raw_value, _ = value
+    display_value = format_percent(raw_value, best)
+    if raw_value == best:
+        return f"\\textbf{{{display_value}}}"
+    return display_value
 
-for row in rows:
-    test, library = parse_name(row["Name"])
-    if test not in tests:
-        tests.append(test)
-    if library not in libraries:
-        libraries.append(library)
-    time_values[(test, library)] = table_value(row["Mean (ps)"], format_microseconds(row["Mean (ps)"]))
-    memory_values[(test, library)] = table_value(row["Allocated"], row["Allocated"])
+def read_results(input_path):
+    with open(input_path, newline="") as f:
+        rows = list(csv.DictReader(f))
 
-write_table(f"{prefix}-time.tex", f"{caption}: mean time (microseconds)", tests, libraries, time_values)
-write_table(f"{prefix}-memory.tex", f"{caption}: allocated bytes", tests, libraries, memory_values)
-' "$input" "$prefix" "$caption"
+    tests = []
+    libraries = []
+    time_values = {}
+    memory_values = {}
+
+    for row in rows:
+        test, library = parse_name(row["Name"])
+        if test not in tests:
+            tests.append(test)
+        if library not in libraries:
+            libraries.append(library)
+        time_values[(test, library)] = table_value(row["Mean (ps)"], format_microseconds(row["Mean (ps)"]))
+        memory_values[(test, library)] = table_value(row["Allocated"], row["Allocated"])
+
+    return tests, libraries, time_values, memory_values
+
+def write_table(f, caption, tests, libraries, values, format_value):
+    f.write("\\section*{" + latex_escape(caption) + "}\n")
+    f.write("\\begin{center}\n")
+    f.write("\\resizebox{\\textwidth}{!}{%\n")
+    f.write("\\begin{tabular}{l" + "r" * len(libraries) + "}\n")
+    f.write("\\toprule\n")
+    f.write("Test case & " + " & ".join(latex_escape(lib) for lib in libraries) + " \\\\\n")
+    f.write("\\midrule\n")
+    for test in tests:
+        row = [latex_escape(test)]
+        present_values = [values[(test, lib)][0] for lib in libraries if (test, lib) in values]
+        best = min(present_values) if present_values else None
+        row.extend(format_value(values.get((test, lib)), best) for lib in libraries)
+        f.write(" & ".join(row) + " \\\\\n")
+    f.write("\\bottomrule\n")
+    f.write("\\end{tabular}\n")
+    f.write("}\n")
+    f.write("\\end{center}\n\n")
+
+def write_result_tables(f, caption, result):
+    tests, libraries, time_values, memory_values = result
+    write_table(f, f"{caption}: mean time (microseconds)", tests, libraries, time_values, format_absolute_cell)
+    write_table(f, f"{caption}: mean time (% of fastest)", tests, libraries, time_values, format_relative_cell)
+    write_table(f, f"{caption}: allocated bytes", tests, libraries, memory_values, format_absolute_cell)
+    write_table(f, f"{caption}: allocated bytes (% of least allocated)", tests, libraries, memory_values, format_relative_cell)
+
+o2_results = read_results(o2_input_path)
+o0_results = read_results(o0_input_path)
+
+with open(output_path, "w", newline="") as f:
+    f.write("\\documentclass{article}\n")
+    f.write("\\usepackage[margin=0.5in]{geometry}\n")
+    f.write("\\usepackage{booktabs}\n")
+    f.write("\\usepackage{graphicx}\n")
+    f.write("\\begin{document}\n")
+    write_result_tables(f, "Benchmark results compiled with -O2", o2_results)
+    write_result_tables(f, "Benchmark results compiled with -O0", o0_results)
+    f.write("\\end{document}\n")
+' "$o2_input" "$o0_input" "$output"
 }
 
 compile_latex_tables() {
-    latexmk -pdf -interaction=nonstopmode -halt-on-error -auxdir="$tmp_dir" -outdir="$results_dir" "$results_dir/o2-time.tex"
-    latexmk -pdf -interaction=nonstopmode -halt-on-error -auxdir="$tmp_dir" -outdir="$results_dir" "$results_dir/o2-memory.tex"
-    latexmk -pdf -interaction=nonstopmode -halt-on-error -auxdir="$tmp_dir" -outdir="$results_dir" "$results_dir/o0-time.tex"
-    latexmk -pdf -interaction=nonstopmode -halt-on-error -auxdir="$tmp_dir" -outdir="$results_dir" "$results_dir/o0-memory.tex"
+    local tex="$results_dir/benchmark-tables.tex"
+    local stem
+    local ext
+    local generated_file
+    latexmk -pdf -interaction=nonstopmode -halt-on-error -emulate-aux-dir -auxdir="$tmp_dir" -outdir="$results_dir" "$tex"
+
+    stem="$(basename "$tex" .tex)"
+    for ext in aux fdb_latexmk fls log synctex.gz synctex.tz; do
+        generated_file="$results_dir/$stem.$ext"
+        if [[ -e "$generated_file" ]]; then
+            mv -f "$generated_file" "$tmp_dir/"
+        fi
+    done
 }
 
 if [[ "${1:-}" == "--tables-only" ]]; then
-    csv_to_latex_tables "$results_dir/o2-results.csv" "$results_dir/o2" "Benchmark results compiled with -O2"
-    csv_to_latex_tables "$results_dir/o0-results.csv" "$results_dir/o0" "Benchmark results compiled with -O0"
+    cleanup_separate_latex_tables
+    csv_to_latex_tables "$results_dir/o2-results.csv" "$results_dir/o0-results.csv" "$results_dir/benchmark-tables.tex"
     compile_latex_tables
     exit 0
 fi
 
 cabal run with-o2 -- --csv "$results_dir/o2-results.csv" -t 5 +RTS -T
-csv_to_latex_tables "$results_dir/o2-results.csv" "$results_dir/o2" "Benchmark results compiled with -O2"
 
 cabal run with-o0 -- --csv "$results_dir/o0-results.csv" -t 5 +RTS -T
-csv_to_latex_tables "$results_dir/o0-results.csv" "$results_dir/o0" "Benchmark results compiled with -O0"
+cleanup_separate_latex_tables
+csv_to_latex_tables "$results_dir/o2-results.csv" "$results_dir/o0-results.csv" "$results_dir/benchmark-tables.tex"
 compile_latex_tables
