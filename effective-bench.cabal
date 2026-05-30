@@ -35,7 +35,8 @@ common bench-common
         PartialTypeSignatures,
         TemplateHaskell,
         MonoLocalBinds,
-        TypeApplications
+        TypeApplications,
+        CPP
     ghc-options:
         -Wall
         -O2
@@ -58,7 +59,8 @@ common bench-common-o0
         PartialTypeSignatures,
         TemplateHaskell,
         MonoLocalBinds,
-        TypeApplications
+        TypeApplications,
+        CPP
     ghc-options:
         -Wall
         -O0
@@ -112,6 +114,7 @@ benchmark with-o2
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
+    cpp-options:    -DBENCH_O2
     other-modules:
         Bench.Mpeff
         Bench.Catch.Eff
@@ -153,6 +156,7 @@ benchmark with-o0
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
+    cpp-options:    -DBENCH_O0
     other-modules:
         Bench.Mpeff
         Bench.Catch.Eff

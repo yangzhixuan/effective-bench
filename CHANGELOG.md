@@ -2,4 +2,4 @@
 
 ## 0.1.0.0 -- YYYY-mm-dd
 
-* First version. Released on an unsuspecting world.
+* First version, adapted from heftia-effects (see README.md for the modifcations that we made).

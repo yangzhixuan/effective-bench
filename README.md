@@ -7,3 +7,9 @@ This benchmark suite was adapted from the benchmarking suite of [heftia-effects]
 3. We separate the libraries into different modules to make sure that each of them receives the same amount of simplifier ticks.
 
 4. The handlers for state and reader of `Mp.Eff` internally use `IORef` and `unsafePerformIO` to store the state. So we create a separate version where state are handled in the usual way as state-passing functions.
+
+TODO:
+
+1. Investigate why `countdown.deep` with `O0` for `mp.safe` is suspiciously fast.
+2. Investigate why `Mp` crashes for nondet.
+3. Implement the tests for effective.

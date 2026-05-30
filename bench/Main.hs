@@ -148,9 +148,8 @@ main =
                     , bench "polysemy.5+5" $ nf NondetPolysemy.pythDeep x
                     , bench "fused.5+5" $ nf NondetFused.pythDeep x
                     , bench "eff.5+5" $ nf NondetEff.pythDeep x
-                    -- `mpeff` crashes on this test. Not sure why.
-    --                , bench "mp.5+5" $ nf NondetMpeff.pythDeep x
-                    , bench "mp.safe.5+5" $ nf NondetMpeffSafe.pythDeep x
+                    -- , bench "mp.5+5" $ nf NondetMpeff.pythDeep x
+                    -- , bench "mp.safe.5+5" $ nf NondetMpeffSafe.pythDeep x
                     , bench "mtl-logict.5+5" $ nf NondetLogict.pythDeep x
                     ]
 
