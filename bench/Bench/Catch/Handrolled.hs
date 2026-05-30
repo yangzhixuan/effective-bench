@@ -6,10 +6,10 @@ import Data.Functor.Identity
 import Control.Monad.Trans.Class
 
 type M1 e a = ExceptT e Identity a
-type M2 e a = ReaderT () (ReaderT () (ReaderT () (ReaderT () (ReaderT ()
-                (ExceptT e
-                  (ReaderT () (ReaderT () (ReaderT () (ReaderT () (ReaderT () Identity))))))))))
-              a
+
+type R5T m = ReaderT () (ReaderT () (ReaderT () (ReaderT () (ReaderT () m))))
+
+type M2 e a = R5T (ExceptT e (R5T Identity)) a
 
 catchShallow :: Int -> Either () ()
 catchShallow = runIdentity . runExceptT . p where

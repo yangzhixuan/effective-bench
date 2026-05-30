@@ -9,7 +9,9 @@ import Bench.Catch.Mpeff.Safe qualified as CatchMpeffSafe
 import Bench.Catch.Mpeff.Unsafe qualified as CatchMpeff
 import Bench.Catch.Mtl qualified as CatchMtl
 import Bench.Catch.Polysemy qualified as CatchPolysemy
+import Bench.Catch.Effective qualified as CatchEffective
 import Bench.Catch.Handrolled qualified as CatchHandrolled
+import Bench.Countdown.Handrolled qualified as CountdownHandrolled
 import Bench.Countdown.Eff qualified as CountdownEff
 import Bench.Countdown.Effectful qualified as CountdownEffectful
 import Bench.Countdown.FreerSimple qualified as CountdownFreer
@@ -23,6 +25,7 @@ import Bench.Local.Effectful qualified as LocalEffectful
 import Bench.Local.Eff qualified as LocalEff
 import Bench.Local.FreerSimple qualified as LocalFreer
 import Bench.Local.FusedEffects qualified as LocalFused
+import Bench.Local.Handrolled qualified as LocalHandrolled
 import Bench.Local.Heftia qualified as LocalHeftia
 import Bench.Local.Mpeff.Safe qualified as LocalMpeffSafe
 import Bench.Local.Mpeff.Unsafe qualified as LocalMpeff
@@ -31,6 +34,8 @@ import Bench.Local.Polysemy qualified as LocalPolysemy
 import Bench.Nondet.Eff qualified as NondetEff
 import Bench.Nondet.FreerSimple qualified as NondetFreer
 import Bench.Nondet.FusedEffects qualified as NondetFused
+import Bench.Nondet.HandrolledListT qualified as NondetHandrolledListT
+import Bench.Nondet.HandrolledLogicT qualified as NondetHandrolledLogicT
 import Bench.Nondet.Heftia qualified as NondetHeftia
 import Bench.Nondet.Mpeff.Safe qualified as NondetMpeffSafe
 import Bench.Nondet.Mpeff.Unsafe qualified as NondetMpeff
@@ -56,21 +61,23 @@ main =
                     , bench "mp" $ nf CountdownMpeff.countdown x
                     , bench "mp.safe" $ nf CountdownMpeffSafe.countdown x
                     , bench "mtl" $ nf CountdownMtl.countdown x
+                    , bench "handrolled" $ nf CountdownHandrolled.countdownShallow x
                     ]
 
         , bgroup "countdown.deep" $
             [10000] <&> \x ->
                 bgroup
                     (show x)
-                    [ bench "heftia.5+5" $ nf CountdownHeftia.countdownDeep x
-                    , bench "freer.5+5" $ nf CountdownFreer.countdownDeep x
-                    , bench "polysemy.5+5" $ nf CountdownPolysemy.countdownDeep x
-                    , bench "fused.5+5" $ nf CountdownFused.countdownDeep x
-                    , bench "effectful.5+5" $ nf CountdownEffectful.countdownDeep x
-                    , bench "eff.5+5" $ nf CountdownEff.countdownDeep x
-                    , bench "mp.5+5" $ nf CountdownMpeff.countdownDeep x
-                    , bench "mp.safe.5+5" $ nf CountdownMpeffSafe.countdownDeep x
-                    , bench "mtl.5+5" $ nf CountdownMtl.countdownDeep x
+                    [ bench "heftia" $ nf CountdownHeftia.countdownDeep x
+                    , bench "freer" $ nf CountdownFreer.countdownDeep x
+                    , bench "polysemy" $ nf CountdownPolysemy.countdownDeep x
+                    , bench "fused" $ nf CountdownFused.countdownDeep x
+                    , bench "effectful" $ nf CountdownEffectful.countdownDeep x
+                    , bench "eff" $ nf CountdownEff.countdownDeep x
+                    , bench "mp" $ nf CountdownMpeff.countdownDeep x
+                    , bench "mp.safe" $ nf CountdownMpeffSafe.countdownDeep x
+                    , bench "mtl" $ nf CountdownMtl.countdownDeep x
+                    , bench "handrolled" $ nf CountdownHandrolled.countdownDeep x
                     ]
 
         , bgroup "catch.shallow" $
@@ -86,6 +93,7 @@ main =
                     , bench "mp" $ nf CatchMpeff.catchBench x
                     , bench "mp.safe" $ nf CatchMpeffSafe.catchBench x
                     , bench "mtl" $ nf CatchMtl.catchBench x
+                    , bench "effective" $ nf CatchEffective.catchBench x
                     , bench "handrolled" $ nf CatchHandrolled.catchShallow x
                     ]
 
@@ -93,15 +101,16 @@ main =
             [10000] <&> \x ->
                 bgroup
                     (show x)
-                    [ bench "heftia.5+5" $ nf CatchHeftia.catchDeep x
-                    , bench "freer.5+5" $ nf CatchFreer.catchDeep x
-                    , bench "polysemy.5+5" $ nf CatchPolysemy.catchDeep x
-                    , bench "fused.5+5" $ nf CatchFused.catchDeep x
-                    , bench "effectful.5+5" $ nf CatchEffectful.catchDeep x
-                    , bench "eff.5+5" $ nf CatchEff.catchDeep x
-                    , bench "mp.5+5" $ nf CatchMpeff.catchDeep x
-                    , bench "mp.safe.5+5" $ nf CatchMpeffSafe.catchDeep x
-                    , bench "mtl.5+5" $ nf CatchMtl.catchDeep x
+                    [ bench "heftia" $ nf CatchHeftia.catchDeep x
+                    , bench "freer" $ nf CatchFreer.catchDeep x
+                    , bench "polysemy" $ nf CatchPolysemy.catchDeep x
+                    , bench "fused" $ nf CatchFused.catchDeep x
+                    , bench "effectful" $ nf CatchEffectful.catchDeep x
+                    , bench "eff" $ nf CatchEff.catchDeep x
+                    , bench "mp" $ nf CatchMpeff.catchDeep x
+                    , bench "mp.safe" $ nf CatchMpeffSafe.catchDeep x
+                    , bench "mtl" $ nf CatchMtl.catchDeep x
+                    , bench "effective" $ nf CatchEffective.catchDeep x
                     , bench "handrolled" $ nf CatchHandrolled.catchDeep x
                     ]
 
@@ -118,21 +127,24 @@ main =
                     , bench "mp" $ nf LocalMpeff.localBench x
                     , bench "mp.safe" $ nf LocalMpeffSafe.localBench x
                     , bench "mtl" $ nf LocalMtl.localBench x
+                    , bench "effective" $ nf CatchEffective.catchDeep x
+                    , bench "handrolled" $ nf LocalHandrolled.localShallow x
                     ]
 
         , bgroup "local.deep" $
             [10000] <&> \x ->
                 bgroup
                     (show x)
-                    [ bench "heftia.5+5" $ nf LocalHeftia.localDeep x
-                    , bench "freer.5+5" $ nf LocalFreer.localDeep x
-                    , bench "polysemy.5+5" $ nf LocalPolysemy.localDeep x
-                    , bench "fused.5+5" $ nf LocalFused.localDeep x
-                    , bench "effectful.5+5" $ nf LocalEffectful.localDeep x
-                    , bench "eff.5+5" $ nf LocalEff.localDeep x
-                    , bench "mp.5+5" $ nf LocalMpeff.localDeep x
-                    , bench "mp.safe.5+5" $ nf LocalMpeffSafe.localDeep x
-                    , bench "mtl.5+5" $ nf LocalMtl.localDeep x
+                    [ bench "heftia" $ nf LocalHeftia.localDeep x
+                    , bench "freer" $ nf LocalFreer.localDeep x
+                    , bench "polysemy" $ nf LocalPolysemy.localDeep x
+                    , bench "fused" $ nf LocalFused.localDeep x
+                    , bench "effectful" $ nf LocalEffectful.localDeep x
+                    , bench "eff" $ nf LocalEff.localDeep x
+                    , bench "mp" $ nf LocalMpeff.localDeep x
+                    , bench "mp.safe" $ nf LocalMpeffSafe.localDeep x
+                    , bench "mtl" $ nf LocalMtl.localDeep x
+                    , bench "handrolled" $ nf LocalHandrolled.localDeep x
                     ]
 
         , bgroup "nondet.shallow" $
@@ -148,21 +160,25 @@ main =
                     , bench "mp.safe" $ nf NondetMpeffSafe.pyth x
                     , bench "mtl.listt" $ nf NondetListT.pyth x
                     , bench "mtl-logict" $ nf NondetLogict.pyth x
+                    , bench "handrolled.listt" $ nf NondetHandrolledListT.pyth x
+                    , bench "handrolled.logict" $ nf NondetHandrolledLogicT.pyth x
                     ]
 
         , bgroup "nondet.deep" $
             [32] <&> \x ->
                 bgroup
                     (show x)
-                    [ bench "heftia.5+5" $ nf NondetHeftia.pythDeep x
-                    , bench "freer.5+5" $ nf NondetFreer.pythDeep x
-                    , bench "polysemy.5+5" $ nf NondetPolysemy.pythDeep x
-                    , bench "fused.5+5" $ nf NondetFused.pythDeep x
-                    , bench "eff.5+5" $ nf NondetEff.pythDeep x
-                    , bench "mp.5+5" $ nf NondetMpeff.pythDeep x
-                    , bench "mp.safe.5+5" $ nf NondetMpeffSafe.pythDeep x
-                    , bench "mtl.listt.5+5" $ nf NondetListT.pythDeep x
-                    , bench "mtl-logict.5+5" $ nf NondetLogict.pythDeep x
+                    [ bench "heftia" $ nf NondetHeftia.pythDeep x
+                    , bench "freer" $ nf NondetFreer.pythDeep x
+                    , bench "polysemy" $ nf NondetPolysemy.pythDeep x
+                    , bench "fused" $ nf NondetFused.pythDeep x
+                    , bench "eff" $ nf NondetEff.pythDeep x
+                    , bench "mp" $ nf NondetMpeff.pythDeep x
+                    , bench "mp.safe" $ nf NondetMpeffSafe.pythDeep x
+                    , bench "mtl.listt" $ nf NondetListT.pythDeep x
+                    , bench "mtl-logict" $ nf NondetLogict.pythDeep x
+                    , bench "handrolled.listt" $ nf NondetHandrolledListT.pythDeep x
+                    , bench "handrolled.logict" $ nf NondetHandrolledLogicT.pythDeep x
                     ]
 
         ]
