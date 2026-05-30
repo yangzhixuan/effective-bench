@@ -1,0 +1,25 @@
+\documentclass[varwidth,border=2pt]{standalone}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\begin{document}
+\begin{center}
+\textbf{Benchmark results compiled with -O0: mean time (microseconds)}
+
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+Test case & heftia & freer & polysemy & fused & effectful & eff & mp & mp.safe & mtl & mtl-logict \\
+\midrule
+countdown.shallow.10000 & 769.804 & \textbf{487.71} & 1717.256 & 1687.425 & 720.031 & 740.016 & 852.524 & 2109.614 & 639.147 & -- \\
+countdown.deep.10000 & 2802.716 & 947.98 & 2845.409 & 10781.356 & 730.012 & 744.009 & 1406.482 & \textbf{0.39} & 5017.116 & -- \\
+catch.shallow.10000 & 1033.045 & -- & 2634.797 & 3220.245 & 1742.393 & 382111.4 & 1366.034 & 1365.427 & \textbf{245.53} & -- \\
+catch.deep.10000 & 7784.781 & -- & 6803.334 & 15275.094 & 1745.242 & 414948 & 1372.429 & \textbf{1368.017} & 3828.094 & -- \\
+local.shallow.10000 & 4239.275 & -- & 2533.816 & 1410.222 & 1115.764 & 415990.8 & 1120.826 & 1138.24 & \textbf{339.127} & -- \\
+local.deep.10000 & 12938.119 & -- & 5357.547 & 5941.344 & 1165.986 & 398002.2 & 1148.32 & 1135.12 & \textbf{790.313} & -- \\
+nondet.shallow.32 & 7011.231 & 5956.32 & 12830.712 & \textbf{2056.619} & -- & 27175.112 & 2876.341 & 2853.806 & -- & 2388.169 \\
+nondet.deep.32 & 15684.919 & 7769.573 & 22564.95 & 10859.825 & -- & 48675.075 & -- & -- & -- & \textbf{6673.069} \\
+\bottomrule
+\end{tabular}
+}
+\end{center}
+\end{document}

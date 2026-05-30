@@ -1,0 +1,25 @@
+\documentclass[varwidth,border=2pt]{standalone}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\begin{document}
+\begin{center}
+\textbf{Benchmark results compiled with -O2: allocated bytes}
+
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+Test case & heftia & freer & polysemy & fused & effectful & eff & mp & mp.safe & mtl & mtl-logict \\
+\midrule
+countdown.shallow.10000 & 1760148 & 1600148 & 13361454 & \textbf{24} & 1121628 & 320370 & 4241052 & 13281007 & \textbf{24} & -- \\
+countdown.deep.10000 & 17760427 & 10400183 & 37363416 & 27121176 & 1136955 & 326218 & 4242291 & 1776 & \textbf{24} & -- \\
+catch.shallow.10000 & 4069575 & -- & 7764872 & \textbf{65584} & 5525881 & 411301708 & 5521304 & 5521302 & 65585 & -- \\
+catch.deep.10000 & 16870349 & -- & 55153518 & 16165027 & 5541296 & 412069088 & 5522975 & 5522974 & \textbf{65561} & -- \\
+local.shallow.10000 & 7205006 & -- & 12629968 & \textbf{24} & 4570135 & 409636572 & 4953497 & 4953471 & \textbf{24} & -- \\
+local.deep.10000 & 16005942 & -- & 30231895 & \textbf{24} & 4618375 & 410441281 & 4955185 & 4955182 & \textbf{24} & -- \\
+nondet.shallow.32 & 13454068 & 15889859 & 43492404 & 3606900 & -- & 97193318 & 21022764 & 21022764 & -- & \textbf{1987323} \\
+nondet.deep.32 & 67559993 & 45645729 & 43569752 & 26810500 & -- & 285300246 & -- & -- & -- & \textbf{1969091} \\
+\bottomrule
+\end{tabular}
+}
+\end{center}
+\end{document}
