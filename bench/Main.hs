@@ -9,6 +9,7 @@ import Bench.Catch.Mpeff.Safe qualified as CatchMpeffSafe
 import Bench.Catch.Mpeff.Unsafe qualified as CatchMpeff
 import Bench.Catch.Mtl qualified as CatchMtl
 import Bench.Catch.Polysemy qualified as CatchPolysemy
+import Bench.Catch.Handrolled qualified as CatchHandrolled
 import Bench.Countdown.Eff qualified as CountdownEff
 import Bench.Countdown.Effectful qualified as CountdownEffectful
 import Bench.Countdown.FreerSimple qualified as CountdownFreer
@@ -85,6 +86,7 @@ main =
                     , bench "mp" $ nf CatchMpeff.catchBench x
                     , bench "mp.safe" $ nf CatchMpeffSafe.catchBench x
                     , bench "mtl" $ nf CatchMtl.catchBench x
+                    , bench "handrolled" $ nf CatchHandrolled.catchShallow x
                     ]
 
         , bgroup "catch.deep" $
@@ -100,6 +102,7 @@ main =
                     , bench "mp.5+5" $ nf CatchMpeff.catchDeep x
                     , bench "mp.safe.5+5" $ nf CatchMpeffSafe.catchDeep x
                     , bench "mtl.5+5" $ nf CatchMtl.catchDeep x
+                    , bench "handrolled" $ nf CatchHandrolled.catchDeep x
                     ]
 
         , bgroup "local.shallow" $

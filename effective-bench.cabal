@@ -115,8 +115,12 @@ common bench-list-t
     build-depends:
         list-t == 1.0.5.7
 
+common bench-handrolled
+    build-depends:
+        transformers == 0.6.3.0
+
 benchmark with-o2
-    import:         bench-common, bench-heftia, bench-freer-simple, bench-polysemy, bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl, bench-logict, bench-list-t
+    import:         bench-common, bench-heftia, bench-freer-simple, bench-polysemy, bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl, bench-logict, bench-list-t, bench-handrolled
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
@@ -132,6 +136,7 @@ benchmark with-o2
         Bench.Catch.Mpeff.Unsafe
         Bench.Catch.Mtl
         Bench.Catch.Polysemy
+        Bench.Catch.Handrolled
         Bench.Countdown.Eff
         Bench.Countdown.Effectful
         Bench.Countdown.FreerSimple
@@ -161,7 +166,7 @@ benchmark with-o2
         Bench.Nondet.Polysemy
 
 benchmark with-o0
-    import:         bench-common-o0, bench-heftia, bench-freer-simple, bench-polysemy, bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl, bench-logict, bench-list-t
+    import:         bench-common-o0, bench-heftia, bench-freer-simple, bench-polysemy, bench-fused-effects, bench-effectful, bench-eff, bench-mpeff, bench-mtl, bench-logict, bench-list-t, bench-handrolled
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
@@ -177,6 +182,7 @@ benchmark with-o0
         Bench.Catch.Mpeff.Unsafe
         Bench.Catch.Mtl
         Bench.Catch.Polysemy
+        Bench.Catch.Handrolled
         Bench.Countdown.Eff
         Bench.Countdown.Effectful
         Bench.Countdown.FreerSimple
