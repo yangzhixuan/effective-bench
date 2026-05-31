@@ -1,0 +1,26 @@
+\documentclass[varwidth,border=2pt]{standalone}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\begin{document}
+\textbf{Benchmark results compiled with -O2: allocated bytes (\% of least allocated)}
+
+\begin{center}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrrrrrrr}
+\toprule
+Test case & heftia & freer & polysemy & fused & effectful & eff & effective & effective.naive & mp & mp.safe & mtl.logict & handrolled.logict & mtl.listt & handrolled.listt \\
+\midrule
+countdown.shallow.10000 & 7333958.3\% & 6667262.5\% & 55672766.7\% & \textbf{100.0\%} & 4673191.7\% & 8697379.2\% & 10334320.8\% & 4333829.2\% & 14338191.7\% & 59337929.2\% & \textbf{100.0\%} & \textbf{100.0\%} & -- & -- \\
+countdown.deep.10000 & 74001629.2\% & 43334016.7\% & 155680600.0\% & 113005116.7\% & 4735429.2\% & 8700316.7\% & 8334120.8\% & 16334454.2\% & 14344520.8\% & 172682787.5\% & \textbf{100.0\%} & \textbf{100.0\%} & -- & -- \\
+catch.shallow.10000 & 6205.2\% & 100.0\% & 11839.6\% & 100.0\% & 11963.8\% & 630367.2\% & 2573.5\% & 1103.9\% & 9272.7\% & 9272.7\% & \textbf{100.0\%} & 100.0\% & -- & -- \\
+catch.deep.10000 & 25723.3\% & 100.7\% & 84096.1\% & 24647.9\% & 11990.9\% & 631605.8\% & 2329.5\% & 5135.2\% & 9276.6\% & 9276.6\% & 100.0\% & \textbf{100.0\%} & -- & -- \\
+local.shallow.10000 & 30021000.0\% & 19972016.7\% & 52625020.8\% & \textbf{100.0\%} & 18025879.2\% & 1706834141.7\% & 6956020.8\% & 4289258.3\% & 22973166.7\% & 22973179.2\% & \textbf{100.0\%} & \textbf{100.0\%} & -- & -- \\
+local.deep.10000 & 66691587.5\% & 19973845.8\% & 125967312.5\% & \textbf{100.0\%} & 18088845.8\% & 1710000058.3\% & 6622791.7\% & 10623120.8\% & 22982533.3\% & 22982545.8\% & 266.7\% & 266.7\% & -- & -- \\
+nondet.shallow.32 & 878.6\% & 1037.7\% & 2840.2\% & 235.5\% & -- & 7265.7\% & \textbf{100.0\%} & 100.1\% & 1478.9\% & 1478.9\% & 129.8\% & 130.9\% & 239.3\% & 239.3\% \\
+nondet.deep.32 & 4411.7\% & 2980.7\% & 2845.1\% & 1750.7\% & -- & 25024.7\% & \textbf{100.0\%} & 100.2\% & 4482.0\% & 4482.0\% & 128.6\% & 131.3\% & 30679.2\% & 30679.2\% \\
+\bottomrule
+\end{tabular}
+}
+\end{center}
+
+\end{document}

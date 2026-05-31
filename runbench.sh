@@ -6,26 +6,16 @@ results_dir="results"
 tmp_dir="$results_dir/tmp"
 mkdir -p "$results_dir" "$tmp_dir"
 
-cleanup_separate_latex_tables() {
-    local table
-    local ext
-    for table in "$results_dir"/o{0,2}-{time,memory}{,-percent}; do
-        for ext in tex pdf; do
-            rm -f "$table.$ext"
-        done
-    done
-}
-
 csv_to_latex_tables() {
     local o2_input="$1"
     local o0_input="$2"
-    local output="$3"
+    local output_prefix="$3"
 
     python3 -c '
 import csv
 import sys
 
-o2_input_path, o0_input_path, output_path = sys.argv[1:]
+o2_input_path, o0_input_path, output_prefix = sys.argv[1:]
 
 def latex_escape(value):
     return (
@@ -106,8 +96,7 @@ def read_results(input_path):
 
     return tests, libraries, time_values, memory_values
 
-def write_table(f, caption, tests, libraries, values, format_value):
-    f.write("\\section*{" + latex_escape(caption) + "}\n")
+def write_table_body(f, tests, libraries, values, format_value):
     f.write("\\begin{center}\n")
     f.write("\\resizebox{\\textwidth}{!}{%\n")
     f.write("\\begin{tabular}{l" + "r" * len(libraries) + "}\n")
@@ -125,17 +114,41 @@ def write_table(f, caption, tests, libraries, values, format_value):
     f.write("}\n")
     f.write("\\end{center}\n\n")
 
+def write_combined_table(f, caption, tests, libraries, values, format_value):
+    f.write("\\section*{" + latex_escape(caption) + "}\n")
+    write_table_body(f, tests, libraries, values, format_value)
+
+def write_standalone_table(path, caption, tests, libraries, values, format_value):
+    with open(path, "w", newline="") as f:
+        f.write("\\documentclass[varwidth,border=2pt]{standalone}\n")
+        f.write("\\usepackage{booktabs}\n")
+        f.write("\\usepackage{graphicx}\n")
+        f.write("\\begin{document}\n")
+        f.write("\\textbf{" + latex_escape(caption) + "}\n\n")
+        write_table_body(f, tests, libraries, values, format_value)
+        f.write("\\end{document}\n")
+
 def write_result_tables(f, caption, result):
     tests, libraries, time_values, memory_values = result
-    write_table(f, f"{caption}: mean time (microseconds)", tests, libraries, time_values, format_absolute_cell)
-    write_table(f, f"{caption}: mean time (% of fastest)", tests, libraries, time_values, format_relative_cell)
-    write_table(f, f"{caption}: allocated bytes", tests, libraries, memory_values, format_absolute_cell)
-    write_table(f, f"{caption}: allocated bytes (% of least allocated)", tests, libraries, memory_values, format_relative_cell)
+    write_combined_table(f, f"{caption}: mean time (microseconds)", tests, libraries, time_values, format_absolute_cell)
+    write_combined_table(f, f"{caption}: mean time (% of fastest)", tests, libraries, time_values, format_relative_cell)
+    write_combined_table(f, f"{caption}: allocated bytes", tests, libraries, memory_values, format_absolute_cell)
+    write_combined_table(f, f"{caption}: allocated bytes (% of least allocated)", tests, libraries, memory_values, format_relative_cell)
+
+def write_standalone_result_tables(prefix, caption, result):
+    tests, libraries, time_values, memory_values = result
+    write_standalone_table(f"{prefix}-time.tex", f"{caption}: mean time (microseconds)", tests, libraries, time_values, format_absolute_cell)
+    write_standalone_table(f"{prefix}-time-percent.tex", f"{caption}: mean time (% of fastest)", tests, libraries, time_values, format_relative_cell)
+    write_standalone_table(f"{prefix}-memory.tex", f"{caption}: allocated bytes", tests, libraries, memory_values, format_absolute_cell)
+    write_standalone_table(f"{prefix}-memory-percent.tex", f"{caption}: allocated bytes (% of least allocated)", tests, libraries, memory_values, format_relative_cell)
 
 o2_results = read_results(o2_input_path)
 o0_results = read_results(o0_input_path)
 
-with open(output_path, "w", newline="") as f:
+write_standalone_result_tables(f"{output_prefix}/o2", "Benchmark results compiled with -O2", o2_results)
+write_standalone_result_tables(f"{output_prefix}/o0", "Benchmark results compiled with -O0", o0_results)
+
+with open(f"{output_prefix}/benchmark-tables.tex", "w", newline="") as f:
     f.write("\\documentclass{article}\n")
     f.write("\\usepackage[margin=0.5in]{geometry}\n")
     f.write("\\usepackage{booktabs}\n")
@@ -144,28 +157,29 @@ with open(output_path, "w", newline="") as f:
     write_result_tables(f, "Benchmark results compiled with -O2", o2_results)
     write_result_tables(f, "Benchmark results compiled with -O0", o0_results)
     f.write("\\end{document}\n")
-' "$o2_input" "$o0_input" "$output"
+' "$o2_input" "$o0_input" "$output_prefix"
 }
 
 compile_latex_tables() {
-    local tex="$results_dir/benchmark-tables.tex"
+    local tex
     local stem
     local ext
     local generated_file
-    latexmk -pdf -interaction=nonstopmode -halt-on-error -emulate-aux-dir -auxdir="$tmp_dir" -outdir="$results_dir" "$tex"
+    for tex in "$results_dir"/benchmark-tables.tex "$results_dir"/o{0,2}-{time,memory}{,-percent}.tex; do
+        latexmk -pdf -interaction=nonstopmode -halt-on-error -emulate-aux-dir -auxdir="$tmp_dir" -outdir="$results_dir" "$tex"
 
-    stem="$(basename "$tex" .tex)"
-    for ext in aux fdb_latexmk fls log synctex.gz synctex.tz; do
-        generated_file="$results_dir/$stem.$ext"
-        if [[ -e "$generated_file" ]]; then
-            mv -f "$generated_file" "$tmp_dir/"
-        fi
+        stem="$(basename "$tex" .tex)"
+        for ext in aux fdb_latexmk fls log synctex.gz synctex.tz; do
+            generated_file="$results_dir/$stem.$ext"
+            if [[ -e "$generated_file" ]]; then
+                mv -f "$generated_file" "$tmp_dir/"
+            fi
+        done
     done
 }
 
 if [[ "${1:-}" == "--tables-only" ]]; then
-    cleanup_separate_latex_tables
-    csv_to_latex_tables "$results_dir/o2-results.csv" "$results_dir/o0-results.csv" "$results_dir/benchmark-tables.tex"
+    csv_to_latex_tables "$results_dir/o2-results.csv" "$results_dir/o0-results.csv" "$results_dir"
     compile_latex_tables
     exit 0
 fi
@@ -173,6 +187,5 @@ fi
 cabal run with-o2 -- --csv "$results_dir/o2-results.csv" -t 5 +RTS -T
 
 cabal run with-o0 -- --csv "$results_dir/o0-results.csv" -t 5 +RTS -T
-cleanup_separate_latex_tables
-csv_to_latex_tables "$results_dir/o2-results.csv" "$results_dir/o0-results.csv" "$results_dir/benchmark-tables.tex"
+csv_to_latex_tables "$results_dir/o2-results.csv" "$results_dir/o0-results.csv" "$results_dir"
 compile_latex_tables

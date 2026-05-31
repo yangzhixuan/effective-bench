@@ -1,0 +1,26 @@
+\documentclass[varwidth,border=2pt]{standalone}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\begin{document}
+\textbf{Benchmark results compiled with -O2: mean time (\% of fastest)}
+
+\begin{center}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrrrrrrr}
+\toprule
+Test case & heftia & freer & polysemy & fused & effectful & eff & effective & effective.naive & mp & mp.safe & mtl.logict & handrolled.logict & mtl.listt & handrolled.listt \\
+\midrule
+countdown.shallow.10000 & 3586.8\% & 3278.1\% & 27571.7\% & 101.3\% & 3225.5\% & 6178.2\% & 5623.5\% & 1888.4\% & 4097.1\% & 24721.5\% & 101.7\% & \textbf{100.0\%} & -- & -- \\
+countdown.deep.10000 & 26906.8\% & 12624.0\% & 48171.9\% & 57005.3\% & 3171.9\% & 5967.3\% & 3501.8\% & 3570.5\% & 4111.9\% & 74508.5\% & \textbf{100.0\%} & 100.1\% & -- & -- \\
+catch.shallow.10000 & 1325.4\% & 172.3\% & 5516.9\% & 100.2\% & 5164.4\% & 1810722.2\% & 1205.4\% & 359.6\% & 4106.6\% & 4067.6\% & 100.9\% & \textbf{100.0\%} & -- & -- \\
+catch.deep.10000 & 15504.3\% & 162.7\% & 32039.7\% & 8099.6\% & 5224.2\% & 1881633.1\% & 855.9\% & 1152.8\% & 4083.7\% & 4120.2\% & 100.5\% & \textbf{100.0\%} & -- & -- \\
+local.shallow.10000 & 19359.5\% & 9530.2\% & 44963.0\% & 100.1\% & 11296.8\% & 8308441.6\% & 4106.7\% & 2829.9\% & 16176.5\% & 16322.5\% & 100.8\% & \textbf{100.0\%} & -- & -- \\
+local.deep.10000 & 78886.4\% & 9470.8\% & 105868.7\% & \textbf{100.0\%} & 11273.2\% & 8031138.5\% & 4214.4\% & 4405.5\% & 16336.1\% & 16407.0\% & 101.3\% & 100.1\% & -- & -- \\
+nondet.shallow.32 & 876.1\% & 1439.4\% & 3433.9\% & 108.0\% & -- & 11020.8\% & 342.1\% & 400.8\% & 767.8\% & 785.2\% & \textbf{100.0\%} & 108.9\% & 161.4\% & 157.3\% \\
+nondet.deep.32 & 2219.9\% & 2370.2\% & 3230.3\% & 1012.3\% & -- & 20946.9\% & 323.3\% & 257.8\% & 2353.7\% & 2351.0\% & 101.8\% & \textbf{100.0\%} & 26353.6\% & 26366.5\% \\
+\bottomrule
+\end{tabular}
+}
+\end{center}
+
+\end{document}
