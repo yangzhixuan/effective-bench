@@ -1,12 +1,12 @@
 {-# OPTIONS_GHC -Wno-unused-matches #-}
 
-module Bench.Catch.EffectiveFullStaged (catchBench, catchDeep) where
+module Bench.Catch.EffectiveFullyStaged (catchBench, catchDeep) where
 
-import Bench.EffectiveFullStaged qualified as Staged
+import Bench.EffectiveFullyStaged qualified as Staged
 import "effective" Control.Effect
 import "effective" Control.Effect.CodeGen
 import "effective" Control.Effect.Except
-import "effective" Control.Effect.Internal.AlgTrans (weakenC)
+import "effective" Control.Effect.Internal.AlgTrans
 import "effective" Control.Effect.Reader
 import Data.Functor.Identity
 
@@ -20,8 +20,8 @@ catchBench n = runIdentity (runExceptT (p n))
                 (Staged.catchGen [|| m ||] [|| p ||])
           )
 
-catchDeep :: Int -> Either () ()
-catchDeep n =
+catchDeep' :: Int -> Either () ()
+catchDeep' n =
     (runIdentity . r . r . r . r . r . runExceptT . r . r . r . r . r) (p n)
   where
     r :: ReaderT () m a -> m a
@@ -41,15 +41,15 @@ catchDeep n =
                 )
                 (Staged.catchGen [|| m ||] [|| p ||]))
 
-catchDeep' :: Int -> Either () ()
-catchDeep' n = runIdentity (runExceptT (p n))
+catchDeep :: Int -> Either () ()
+catchDeep n = runIdentity (runExceptT (p n))
   where
     p :: Int -> ExceptT () Identity ()
     p m =
-        $$(let r = asker ([|| () ||] :: CodeQ ())
+        $$(let r = halg (asker ([|| () ||] :: CodeQ ()))
            in stage
                (upExcept @() @Identity `fuseAT`
-                  (halg $ (r ++> r ++> r ++> r ++> r
-                             ++> except @(CodeQ ())
-                             ++> r ++> r ++> r ++> r ++> r)))
+                  (r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT`
+                      exceptAT @(CodeQ ()) `fuseAppAT`
+                   r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r))
                (Staged.catchGen [|| m ||] [|| p ||]))

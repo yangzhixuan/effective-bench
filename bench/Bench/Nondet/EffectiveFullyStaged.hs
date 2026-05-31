@@ -1,11 +1,11 @@
 {-# OPTIONS_GHC -Wno-unused-matches #-}
 
-module Bench.Nondet.EffectiveFullStaged (pyth, pythDeep) where
+module Bench.Nondet.EffectiveFullyStaged (pyth, pythDeep) where
 
-import Bench.EffectiveFullStaged qualified as Staged
+import Bench.EffectiveFullyStaged qualified as Staged
 import "effective" Control.Effect
 import "effective" Control.Effect.CodeGen
-import "effective" Control.Effect.Internal.AlgTrans (weakenC)
+import "effective" Control.Effect.Internal.AlgTrans
 import "effective" Control.Monad.Trans.List
 import "effective" Control.Effect.Reader
 import Data.Functor.Identity
@@ -24,8 +24,8 @@ pyth n =
             (Staged.pythGen [|| n ||] [|| choose ||])
       )
 
-pythDeep :: Int -> [(Int, Int, Int)]
-pythDeep n =
+pythDeep' :: Int -> [(Int, Int, Int)]
+pythDeep' n =
     (runIdentity . r . r . r . r . r . runListT' . r . r . r . r . r)
         $$( stage
                 ( Staged.r5AT
@@ -38,3 +38,12 @@ pythDeep n =
   where
     r :: ReaderT () m a -> m a
     r m = runReaderT m ()
+
+pythDeep :: Int -> [(Int, Int, Int)]
+pythDeep n =
+    $$( let r = halg (asker ([|| () ||] :: CodeQ ()))
+         in stage
+                (pushWithUpAT @Identity `fuseAT`
+                   (r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT`
+                    r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r))
+                (Staged.pythGen [|| n ||] [|| choose ||]))

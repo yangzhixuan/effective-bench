@@ -137,7 +137,7 @@ benchmark with-o2
     cpp-options:    -DBENCH_O2
     other-modules:
         Bench.Mpeff
-        Bench.EffectiveFullStaged
+        Bench.EffectiveFullyStaged
         --
         Bench.Catch.Eff
         Bench.Catch.Effectful
@@ -150,13 +150,13 @@ benchmark with-o2
         Bench.Catch.Polysemy
         Bench.Catch.Handrolled
         Bench.Catch.Effective
-        Bench.Catch.EffectiveFullStaged
+        Bench.Catch.EffectiveFullyStaged
         Bench.Catch.EffectiveLightlyStaged
         Bench.Catch.EffectiveNaive
         --
         Bench.Countdown.Eff
         Bench.Countdown.Effective
-        Bench.Countdown.EffectiveFullStaged
+        Bench.Countdown.EffectiveFullyStaged
         Bench.Countdown.EffectiveLightlyStaged
         Bench.Countdown.EffectiveNaive
         Bench.Countdown.Effectful
@@ -172,7 +172,7 @@ benchmark with-o2
         Bench.Local.Effectful
         Bench.Local.Eff
         Bench.Local.Effective
-        Bench.Local.EffectiveFullStaged
+        Bench.Local.EffectiveFullyStaged
         Bench.Local.EffectiveLightlyStaged
         Bench.Local.EffectiveNaive
         Bench.Local.FreerSimple
@@ -186,7 +186,7 @@ benchmark with-o2
         --
         Bench.Nondet.Eff
         Bench.Nondet.Effective
-        Bench.Nondet.EffectiveFullStaged
+        Bench.Nondet.EffectiveFullyStaged
         Bench.Nondet.EffectiveLightlyStaged
         Bench.Nondet.EffectiveNaive
         Bench.Nondet.FreerSimple
@@ -210,7 +210,7 @@ benchmark with-o0
     cpp-options:    -DBENCH_O0
     other-modules:
         Bench.Mpeff
-        Bench.EffectiveFullStaged
+        Bench.EffectiveFullyStaged
         --
         Bench.Catch.Eff
         Bench.Catch.Effectful
@@ -223,13 +223,13 @@ benchmark with-o0
         Bench.Catch.Polysemy
         Bench.Catch.Handrolled
         Bench.Catch.Effective
-        Bench.Catch.EffectiveFullStaged
+        Bench.Catch.EffectiveFullyStaged
         Bench.Catch.EffectiveLightlyStaged
         Bench.Catch.EffectiveNaive
         --
         Bench.Countdown.Eff
         Bench.Countdown.Effective
-        Bench.Countdown.EffectiveFullStaged
+        Bench.Countdown.EffectiveFullyStaged
         Bench.Countdown.EffectiveLightlyStaged
         Bench.Countdown.EffectiveNaive
         Bench.Countdown.Effectful
@@ -245,7 +245,7 @@ benchmark with-o0
         Bench.Local.Effectful
         Bench.Local.Eff
         Bench.Local.Effective
-        Bench.Local.EffectiveFullStaged
+        Bench.Local.EffectiveFullyStaged
         Bench.Local.EffectiveLightlyStaged
         Bench.Local.EffectiveNaive
         Bench.Local.FreerSimple
@@ -259,7 +259,7 @@ benchmark with-o0
         --
         Bench.Nondet.Eff
         Bench.Nondet.Effective
-        Bench.Nondet.EffectiveFullStaged
+        Bench.Nondet.EffectiveFullyStaged
         Bench.Nondet.EffectiveLightlyStaged
         Bench.Nondet.EffectiveNaive
         Bench.Nondet.FreerSimple

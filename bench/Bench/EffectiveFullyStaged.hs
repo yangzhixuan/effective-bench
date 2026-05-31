@@ -1,13 +1,13 @@
 {-# LANGUAGE ImpredicativeTypes #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Bench.EffectiveFullStaged where
+module Bench.EffectiveFullyStaged where
 
 import "effective" Control.Effect
+import "effective" Control.Effect.Internal.AlgTrans
 import "effective" Control.Effect.Alternative
 import "effective" Control.Effect.CodeGen
 import "effective" Control.Effect.Except
-import "effective" Control.Effect.Internal.AlgTrans (weakenC)
 import "effective" Control.Effect.Reader
 import "effective" Control.Effect.State.Strict
 import "effective" Control.Monad.Trans.List
