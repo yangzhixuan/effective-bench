@@ -2,6 +2,7 @@ module Main (main) where
 
 import Bench.Catch.Eff qualified as CatchEff
 import Bench.Catch.Effectful qualified as CatchEffectful
+import Bench.Catch.EffectiveFullStaged qualified as CatchEffectiveFullStaged
 import Bench.Catch.EffectiveLightlyStaged qualified as CatchEffectiveLightlyStaged
 import Bench.Catch.FreerSimple qualified as CatchFreer
 import Bench.Catch.FusedEffects qualified as CatchFused
@@ -16,6 +17,7 @@ import Bench.Catch.Handrolled qualified as CatchHandrolled
 import Bench.Countdown.Handrolled qualified as CountdownHandrolled
 import Bench.Countdown.Eff qualified as CountdownEff
 import Bench.Countdown.Effective qualified as CountdownEffective
+import Bench.Countdown.EffectiveFullStaged qualified as CountdownEffectiveFullStaged
 import Bench.Countdown.EffectiveLightlyStaged qualified as CountdownEffectiveLightlyStaged
 import Bench.Countdown.EffectiveNaive qualified as CountdownEffectiveNaive
 import Bench.Countdown.Effectful qualified as CountdownEffectful
@@ -29,6 +31,7 @@ import Bench.Countdown.Polysemy qualified as CountdownPolysemy
 import Bench.Local.Effectful qualified as LocalEffectful
 import Bench.Local.Eff qualified as LocalEff
 import Bench.Local.Effective qualified as LocalEffective
+import Bench.Local.EffectiveFullStaged qualified as LocalEffectiveFullStaged
 import Bench.Local.EffectiveLightlyStaged qualified as LocalEffectiveLightlyStaged
 import Bench.Local.EffectiveNaive qualified as LocalEffectiveNaive
 import Bench.Local.FreerSimple qualified as LocalFreer
@@ -41,6 +44,7 @@ import Bench.Local.Mtl qualified as LocalMtl
 import Bench.Local.Polysemy qualified as LocalPolysemy
 import Bench.Nondet.Eff qualified as NondetEff
 import Bench.Nondet.Effective qualified as NondetEffective
+import Bench.Nondet.EffectiveFullStaged qualified as NondetEffectiveFullStaged
 import Bench.Nondet.EffectiveLightlyStaged qualified as NondetEffectiveLightlyStaged
 import Bench.Nondet.EffectiveNaive qualified as NondetEffectiveNaive
 import Bench.Nondet.FreerSimple qualified as NondetFreer
@@ -70,6 +74,7 @@ main =
                     , bench "effectful" $ nf CountdownEffectful.countdown x
                     , bench "eff" $ nf CountdownEff.countdown x
                     , bench "effective" $ nf CountdownEffective.countdown x
+                    , bench "effective.fstg" $ nf CountdownEffectiveFullStaged.countdown x
                     , bench "effective.naive" $ nf CountdownEffectiveNaive.countdown x
                     , bench "mp" $ nf CountdownMpeff.countdown x
                     , bench "mp.safe" $ nf CountdownMpeffSafe.countdown x
@@ -88,6 +93,7 @@ main =
                     , bench "effectful" $ nf CountdownEffectful.countdownDeep x
                     , bench "eff" $ nf CountdownEff.countdownDeep x
                     , bench "effective" $ nf CountdownEffective.countdownDeep x
+                    , bench "effective.fstg" $ nf CountdownEffectiveFullStaged.countdownDeep x
                     , bench "effective.lstg" $ nf CountdownEffectiveLightlyStaged.countdownDeep x
                     , bench "effective.naive" $ nf CountdownEffectiveNaive.countdownDeep x
                     , bench "mp" $ nf CountdownMpeff.countdownDeep x
@@ -110,6 +116,7 @@ main =
                     , bench "mp.safe" $ nf CatchMpeffSafe.catchBench x
                     , bench "mtl.logict" $ nf CatchMtl.catchBench x
                     , bench "effective" $ nf CatchEffective.catchBench x
+                    , bench "effective.fstg" $ nf CatchEffectiveFullStaged.catchBench x
                     , bench "effective.naive" $ nf CatchEffectiveNaive.catchBench x
                     , bench "handrolled.logict" $ nf CatchHandrolled.catchShallow x
                     ]
@@ -128,6 +135,7 @@ main =
                     , bench "mp.safe" $ nf CatchMpeffSafe.catchDeep x
                     , bench "mtl.logict" $ nf CatchMtl.catchDeep x
                     , bench "effective" $ nf CatchEffective.catchDeep x
+                    , bench "effective.fstg" $ nf CatchEffectiveFullStaged.catchDeep x
                     , bench "effective.lstg" $ nf CatchEffectiveLightlyStaged.catchDeep x
                     , bench "effective.naive" $ nf CatchEffectiveNaive.catchDeep x
                     , bench "handrolled.logict" $ nf CatchHandrolled.catchDeep x
@@ -144,6 +152,7 @@ main =
                     , bench "effectful" $ nf LocalEffectful.localBench x
                     , bench "eff" $ nf LocalEff.localBench x
                     , bench "effective" $ nf LocalEffective.localBench x
+                    , bench "effective.fstg" $ nf LocalEffectiveFullStaged.localBench x
                     , bench "effective.naive" $ nf LocalEffectiveNaive.localBench x
                     , bench "mp" $ nf LocalMpeff.localBench x
                     , bench "mp.safe" $ nf LocalMpeffSafe.localBench x
@@ -162,6 +171,7 @@ main =
                     , bench "effectful" $ nf LocalEffectful.localDeep x
                     , bench "eff" $ nf LocalEff.localDeep x
                     , bench "effective" $ nf LocalEffective.localDeep x
+                    , bench "effective.fstg" $ nf LocalEffectiveFullStaged.localDeep x
                     , bench "effective.lstg" $ nf LocalEffectiveLightlyStaged.localDeep x
                     , bench "effective.naive" $ nf LocalEffectiveNaive.localDeep x
                     , bench "mp" $ nf LocalMpeff.localDeep x
@@ -180,6 +190,7 @@ main =
                     , bench "fused" $ nf NondetFused.pyth x
                     , bench "eff" $ nf NondetEff.pyth x
                     , bench "effective" $ nf NondetEffective.pyth x
+                    , bench "effective.fstg" $ nf NondetEffectiveFullStaged.pyth x
                     , bench "effective.naive" $ nf NondetEffectiveNaive.pyth x
                     , bench "mp" $ nf NondetMpeff.pyth x
                     , bench "mp.safe" $ nf NondetMpeffSafe.pyth x
@@ -199,6 +210,7 @@ main =
                     , bench "fused" $ nf NondetFused.pythDeep x
                     , bench "eff" $ nf NondetEff.pythDeep x
                     , bench "effective" $ nf NondetEffective.pythDeep x
+                    , bench "effective.fstg" $ nf NondetEffectiveFullStaged.pythDeep x
                     , bench "effective.lstg" $ nf NondetEffectiveLightlyStaged.pythDeep x
                     , bench "effective.naive" $ nf NondetEffectiveNaive.pythDeep x
                     , bench "mp" $ nf NondetMpeff.pythDeep x
