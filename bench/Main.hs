@@ -66,11 +66,11 @@ main =
                     , bench "effectful" $ nf CountdownEffectful.countdown x
                     , bench "eff" $ nf CountdownEff.countdown x
                     , bench "effective" $ nf CountdownEffective.countdown x
-                    , bench "effective-naive" $ nf CountdownEffectiveNaive.countdown x
+                    , bench "effective.naive" $ nf CountdownEffectiveNaive.countdown x
                     , bench "mp" $ nf CountdownMpeff.countdown x
                     , bench "mp.safe" $ nf CountdownMpeffSafe.countdown x
-                    , bench "mtl" $ nf CountdownMtl.countdown x
-                    , bench "handrolled" $ nf CountdownHandrolled.countdownShallow x
+                    , bench "mtl.logict" $ nf CountdownMtl.countdown x
+                    , bench "handrolled.logict" $ nf CountdownHandrolled.countdownShallow x
                     ]
 
         , bgroup "countdown.deep" $
@@ -84,11 +84,11 @@ main =
                     , bench "effectful" $ nf CountdownEffectful.countdownDeep x
                     , bench "eff" $ nf CountdownEff.countdownDeep x
                     , bench "effective" $ nf CountdownEffective.countdownDeep x
-                    , bench "effective-naive" $ nf CountdownEffectiveNaive.countdownDeep x
+                    , bench "effective.naive" $ nf CountdownEffectiveNaive.countdownDeep x
                     , bench "mp" $ nf CountdownMpeff.countdownDeep x
                     , bench "mp.safe" $ nf CountdownMpeffSafe.countdownDeep x
-                    , bench "mtl" $ nf CountdownMtl.countdownDeep x
-                    , bench "handrolled" $ nf CountdownHandrolled.countdownDeep x
+                    , bench "mtl.logict" $ nf CountdownMtl.countdownDeep x
+                    , bench "handrolled.logict" $ nf CountdownHandrolled.countdownDeep x
                     ]
 
         , bgroup "catch.shallow" $
@@ -103,10 +103,10 @@ main =
                     , bench "eff" $ nf CatchEff.catchBench x
                     , bench "mp" $ nf CatchMpeff.catchBench x
                     , bench "mp.safe" $ nf CatchMpeffSafe.catchBench x
-                    , bench "mtl" $ nf CatchMtl.catchBench x
+                    , bench "mtl.logict" $ nf CatchMtl.catchBench x
                     , bench "effective" $ nf CatchEffective.catchBench x
-                    , bench "effective-naive" $ nf CatchEffectiveNaive.catchBench x
-                    , bench "handrolled" $ nf CatchHandrolled.catchShallow x
+                    , bench "effective.naive" $ nf CatchEffectiveNaive.catchBench x
+                    , bench "handrolled.logict" $ nf CatchHandrolled.catchShallow x
                     ]
 
         , bgroup "catch.deep" $
@@ -121,10 +121,10 @@ main =
                     , bench "eff" $ nf CatchEff.catchDeep x
                     , bench "mp" $ nf CatchMpeff.catchDeep x
                     , bench "mp.safe" $ nf CatchMpeffSafe.catchDeep x
-                    , bench "mtl" $ nf CatchMtl.catchDeep x
+                    , bench "mtl.logict" $ nf CatchMtl.catchDeep x
                     , bench "effective" $ nf CatchEffective.catchDeep x
-                    , bench "effective-naive" $ nf CatchEffectiveNaive.catchDeep x
-                    , bench "handrolled" $ nf CatchHandrolled.catchDeep x
+                    , bench "effective.naive" $ nf CatchEffectiveNaive.catchDeep x
+                    , bench "handrolled.logict" $ nf CatchHandrolled.catchDeep x
                     ]
 
         , bgroup "local.shallow" $
@@ -138,11 +138,11 @@ main =
                     , bench "effectful" $ nf LocalEffectful.localBench x
                     , bench "eff" $ nf LocalEff.localBench x
                     , bench "effective" $ nf LocalEffective.localBench x
-                    , bench "effective-naive" $ nf LocalEffectiveNaive.localBench x
+                    , bench "effective.naive" $ nf LocalEffectiveNaive.localBench x
                     , bench "mp" $ nf LocalMpeff.localBench x
                     , bench "mp.safe" $ nf LocalMpeffSafe.localBench x
-                    , bench "mtl" $ nf LocalMtl.localBench x
-                    , bench "handrolled" $ nf LocalHandrolled.localShallow x
+                    , bench "mtl.logict" $ nf LocalMtl.localBench x
+                    , bench "handrolled.logict" $ nf LocalHandrolled.localShallow x
                     ]
 
         , bgroup "local.deep" $
@@ -156,11 +156,11 @@ main =
                     , bench "effectful" $ nf LocalEffectful.localDeep x
                     , bench "eff" $ nf LocalEff.localDeep x
                     , bench "effective" $ nf LocalEffective.localDeep x
-                    , bench "effective-naive" $ nf LocalEffectiveNaive.localDeep x
+                    , bench "effective.naive" $ nf LocalEffectiveNaive.localDeep x
                     , bench "mp" $ nf LocalMpeff.localDeep x
                     , bench "mp.safe" $ nf LocalMpeffSafe.localDeep x
-                    , bench "mtl" $ nf LocalMtl.localDeep x
-                    , bench "handrolled" $ nf LocalHandrolled.localDeep x
+                    , bench "mtl.logict" $ nf LocalMtl.localDeep x
+                    , bench "handrolled.logict" $ nf LocalHandrolled.localDeep x
                     ]
 
         , bgroup "nondet.shallow" $
@@ -173,11 +173,11 @@ main =
                     , bench "fused" $ nf NondetFused.pyth x
                     , bench "eff" $ nf NondetEff.pyth x
                     , bench "effective" $ nf NondetEffective.pyth x
-                    , bench "effective-naive" $ nf NondetEffectiveNaive.pyth x
+                    , bench "effective.naive" $ nf NondetEffectiveNaive.pyth x
                     , bench "mp" $ nf NondetMpeff.pyth x
                     , bench "mp.safe" $ nf NondetMpeffSafe.pyth x
                     , bench "mtl.listt" $ nf NondetListT.pyth x
-                    , bench "mtl-logict" $ nf NondetLogict.pyth x
+                    , bench "mtl.logict" $ nf NondetLogict.pyth x
                     , bench "handrolled.listt" $ nf NondetHandrolledListT.pyth x
                     , bench "handrolled.logict" $ nf NondetHandrolledLogicT.pyth x
                     ]
@@ -192,13 +192,12 @@ main =
                     , bench "fused" $ nf NondetFused.pythDeep x
                     , bench "eff" $ nf NondetEff.pythDeep x
                     , bench "effective" $ nf NondetEffective.pythDeep x
-                    , bench "effective-naive" $ nf NondetEffectiveNaive.pythDeep x
+                    , bench "effective.naive" $ nf NondetEffectiveNaive.pythDeep x
                     , bench "mp" $ nf NondetMpeff.pythDeep x
                     , bench "mp.safe" $ nf NondetMpeffSafe.pythDeep x
                     , bench "mtl.listt" $ nf NondetListT.pythDeep x
-                    , bench "mtl-logict" $ nf NondetLogict.pythDeep x
+                    , bench "mtl.logict" $ nf NondetLogict.pythDeep x
                     , bench "handrolled.listt" $ nf NondetHandrolledListT.pythDeep x
                     , bench "handrolled.logict" $ nf NondetHandrolledLogicT.pythDeep x
                     ]
-
         ]
