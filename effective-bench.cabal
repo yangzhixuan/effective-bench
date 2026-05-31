@@ -43,6 +43,7 @@ common bench-common
         -rtsopts
         -threaded
         -fconstraint-solver-iterations=16
+        -freduction-depth=0
         -Wno-partial-type-signatures
         -dcore-lint
     build-depends:
@@ -68,6 +69,7 @@ common bench-common-o0
         -rtsopts
         -threaded
         -fconstraint-solver-iterations=16
+        -freduction-depth=0
         -Wno-partial-type-signatures
         -dcore-lint
     build-depends:
@@ -134,9 +136,25 @@ benchmark with-o2
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
-    cpp-options:    -DBENCH_O2
+    cpp-options:    -DBENCH_O2 -DDISABLE_VERY_DEEP
     other-modules:
         Bench.Mpeff
+        -- Bench.Catch.VeryDeep.Effective
+        -- Bench.Catch.VeryDeep.EffectiveFullyStaged
+        -- Bench.Catch.VeryDeep.FreerSimple
+        -- Bench.Catch.VeryDeep.Mtl
+        -- Bench.Countdown.VeryDeep.Effective
+        -- Bench.Countdown.VeryDeep.EffectiveFullyStaged
+        -- Bench.Countdown.VeryDeep.FreerSimple
+        -- Bench.Countdown.VeryDeep.Mtl
+        -- Bench.Local.VeryDeep.Effective
+        -- Bench.Local.VeryDeep.EffectiveFullyStaged
+        -- Bench.Local.VeryDeep.FreerSimple
+        -- Bench.Local.VeryDeep.Mtl
+        -- Bench.Nondet.VeryDeep.Effective
+        -- Bench.Nondet.VeryDeep.EffectiveFullyStaged
+        -- Bench.Nondet.VeryDeep.FreerSimple
+        -- Bench.Nondet.VeryDeep.MtlLogict
         Bench.EffectiveFullyStaged
         --
         Bench.Catch.Eff
@@ -207,9 +225,25 @@ benchmark with-o0
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
-    cpp-options:    -DBENCH_O0
+    cpp-options:    -DBENCH_O0 -DDISABLE_VERY_DEEP
     other-modules:
         Bench.Mpeff
+        -- Bench.Catch.VeryDeep.Effective
+        -- Bench.Catch.VeryDeep.EffectiveFullyStaged
+        -- Bench.Catch.VeryDeep.FreerSimple
+        -- Bench.Catch.VeryDeep.Mtl
+        -- Bench.Countdown.VeryDeep.Effective
+        -- Bench.Countdown.VeryDeep.EffectiveFullyStaged
+        -- Bench.Countdown.VeryDeep.FreerSimple
+        -- Bench.Countdown.VeryDeep.Mtl
+        -- Bench.Local.VeryDeep.Effective
+        -- Bench.Local.VeryDeep.EffectiveFullyStaged
+        -- Bench.Local.VeryDeep.FreerSimple
+        -- Bench.Local.VeryDeep.Mtl
+        -- Bench.Nondet.VeryDeep.Effective
+        -- Bench.Nondet.VeryDeep.EffectiveFullyStaged
+        -- Bench.Nondet.VeryDeep.FreerSimple
+        -- Bench.Nondet.VeryDeep.MtlLogict
         Bench.EffectiveFullyStaged
         --
         Bench.Catch.Eff

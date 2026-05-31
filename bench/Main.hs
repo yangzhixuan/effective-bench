@@ -57,6 +57,25 @@ import Bench.Nondet.Mpeff.Unsafe qualified as NondetMpeff
 import Bench.Nondet.MtlListT qualified as NondetListT
 import Bench.Nondet.MtlLogict qualified as NondetLogict
 import Bench.Nondet.Polysemy qualified as NondetPolysemy
+
+#ifndef DISABLE_VERY_DEEP
+import Bench.Catch.VeryDeep.Effective qualified as CatchVeryEffective
+import Bench.Catch.VeryDeep.EffectiveFullyStaged qualified as CatchVeryEffectiveFullyStaged
+import Bench.Catch.VeryDeep.FreerSimple qualified as CatchVeryFreer
+import Bench.Catch.VeryDeep.Mtl qualified as CatchVeryMtl
+import Bench.Countdown.VeryDeep.Effective qualified as CountdownVeryEffective
+import Bench.Countdown.VeryDeep.EffectiveFullyStaged qualified as CountdownVeryEffectiveFullyStaged
+import Bench.Countdown.VeryDeep.FreerSimple qualified as CountdownVeryFreer
+import Bench.Countdown.VeryDeep.Mtl qualified as CountdownVeryMtl
+import Bench.Local.VeryDeep.Effective qualified as LocalVeryEffective
+import Bench.Local.VeryDeep.EffectiveFullyStaged qualified as LocalVeryEffectiveFullyStaged
+import Bench.Local.VeryDeep.FreerSimple qualified as LocalVeryFreer
+import Bench.Local.VeryDeep.Mtl qualified as LocalVeryMtl
+import Bench.Nondet.VeryDeep.Effective qualified as NondetVeryEffective
+import Bench.Nondet.VeryDeep.EffectiveFullyStaged qualified as NondetVeryEffectiveFullyStaged
+import Bench.Nondet.VeryDeep.FreerSimple qualified as NondetVeryFreer
+import Bench.Nondet.VeryDeep.MtlLogict qualified as NondetVeryLogict
+#endif
 import Data.Functor ((<&>))
 import Test.Tasty.Bench
 
@@ -102,6 +121,18 @@ main =
                     , bench "handrolled.logict" $ nf CountdownHandrolled.countdownDeep x
                     ]
 
+#ifndef DISABLE_VERY_DEEP
+        , bgroup "countdown.very-deep" $
+            [10000] <&> \x ->
+                bgroup
+                    (show x)
+                    [ bench "freer" $ nf CountdownVeryFreer.countdownDeep x
+                    , bench "effective" $ nf CountdownVeryEffective.countdownDeep x
+                    , bench "effective.fstg" $ nf CountdownVeryEffectiveFullyStaged.countdownDeep x
+                    , bench "mtl.logict" $ nf CountdownVeryMtl.countdownDeep x
+                    ]
+#endif
+
         , bgroup "catch.shallow" $
             [10000] <&> \x ->
                 bgroup
@@ -141,6 +172,18 @@ main =
                     , bench "handrolled.logict" $ nf CatchHandrolled.catchDeep x
                     ]
 
+#ifndef DISABLE_VERY_DEEP
+        , bgroup "catch.very-deep" $
+            [10000] <&> \x ->
+                bgroup
+                    (show x)
+                    [ bench "freer" $ nf CatchVeryFreer.catchDeep x
+                    , bench "mtl.logict" $ nf CatchVeryMtl.catchDeep x
+                    , bench "effective" $ nf CatchVeryEffective.catchDeep x
+                    , bench "effective.fstg" $ nf CatchVeryEffectiveFullyStaged.catchDeep x
+                    ]
+#endif
+
         , bgroup "local.shallow" $
             [10000] <&> \x ->
                 bgroup
@@ -179,6 +222,18 @@ main =
                     , bench "mtl.logict" $ nf LocalMtl.localDeep x
                     , bench "handrolled.logict" $ nf LocalHandrolled.localDeep x
                     ]
+
+#ifndef DISABLE_VERY_DEEP
+        , bgroup "local.very-deep" $
+            [10000] <&> \x ->
+                bgroup
+                    (show x)
+                    [ bench "freer" $ nf LocalVeryFreer.localDeep x
+                    , bench "effective" $ nf LocalVeryEffective.localDeep x
+                    , bench "effective.fstg" $ nf LocalVeryEffectiveFullyStaged.localDeep x
+                    , bench "mtl.logict" $ nf LocalVeryMtl.localDeep x
+                    ]
+#endif
 
         , bgroup "nondet.shallow" $
             [32] <&> \x ->
@@ -220,4 +275,16 @@ main =
                     , bench "handrolled.listt" $ nf NondetHandrolledListT.pythDeep x
                     , bench "handrolled.logict" $ nf NondetHandrolledLogicT.pythDeep x
                     ]
+
+#ifndef DISABLE_VERY_DEEP
+        , bgroup "nondet.very-deep" $
+            [32] <&> \x ->
+                bgroup
+                    (show x)
+                    [ bench "freer" $ nf NondetVeryFreer.pythDeep x
+                    , bench "effective" $ nf NondetVeryEffective.pythDeep x
+                    , bench "effective.fstg" $ nf NondetVeryEffectiveFullyStaged.pythDeep x
+                    , bench "mtl.logict" $ nf NondetVeryLogict.pythDeep x
+                    ]
+#endif
         ]
