@@ -107,7 +107,7 @@ The following are some observations about (different ways of using) `effective`:
 
 The following are some additional remarks about implementations other than `effective`:
 
-* Contrary to some claims online, `MTL` is not slow when optimisations is on. Most of the time GHC inlines typeclass members at use sites. Indeed, in our `O2` experiment `MTL` is quite fast in all tests except for `local.very-deep`, for which GHC gives up inlining. The real problem with `MTL` is inflexibility: the operations and monad transformers are tied to each other rigidly.
+* Contrary to some claims online, `MTL` is not slow when optimisations are on. Most of the time GHC inlines typeclass members at use sites. Indeed, in our `O2` experiment `MTL` is quite fast in all tests except for `local.very-deep`, for which GHC gives up inlining. The real problem with `MTL` is inflexibility: the operations and monad transformers are tied to each other rigidly.
 
 * The performance of `fused-effects` is similar to `MTL`: when inlining happens it is very fast, otherwise it is very slow. However, `fused-effects` is less inlining-friendly compared to `MTL`. It even exhausts the simplifier ticks of GHC for very deep tests.
 
