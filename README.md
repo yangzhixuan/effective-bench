@@ -35,7 +35,7 @@ The shell script `runbench.sh` runs the benchmarks. The benchmarking framework [
 
 All results are generated in the directory `results/`. The raw data are recorded in `o0-results.csv` and `o2-results.csv`. The script also generates some `pdf` files (using LaTeX) for showing the results more nicely. The file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf) contains all results.
 
-The files in `results/` of this repo were generated on my Apple M4 laptop with 24GB memory.
+The files in `results/` of this repo were generated on my Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled.
 
 
 Results Analysis
@@ -43,29 +43,47 @@ Results Analysis
 
 **First of all, we emphasise that the results of this experiment do not necessarily generalise to practical scenarios because the testing programs are all small artificial toy programs**. The purpose of this experiment is to check that our implementation of `effective` has the expected performance characteristics, rather than to compare the performance of the different libraries. However, we can still draw some useful conclusions from these small tests.
 
-* Fully staged `effective` (`effective.fstg` in the tables) consistently performs very well under both `O2` and `O0`. This is not surprising at all because if we inspect the generated code, it is clear that the code is overhead-free. For example, the code for the `countdown` test is
+The following are some observations about (different ways of using) `effective`:
+
+* Fully staged `effective` (`effective.fstg` in the tables) are the fastest in the majority of the test cases under both `O2` and `O0`. This is not surprising because if we inspect the generated code, it is clear that the code for `effective.fstg` is overhead-free. For example, the code for the `countdown` test is
+
 ```haskell
 countdownDeep :: Int -> (Int, Int)
-countdownDeep n = runIdentity (runStateT p n)
-  where
+countdownDeep n = runIdentity (runStateT p n) where
   p =
     StateT
-      (\ s_aSEK
-         -> Identity
-              (if (s_aSEK > 0) then
-                   case runIdentity (runStateT p_aRZI (s_aSEK - 1)) of
-                     (a_aSEL, b_aSEM) -> (a_aSEL, b_aSEM)
-               else
-                   (s_aSEK, s_aSEK)))
+      (\ s
+         -> if (s_a5rr > 0) then
+                runStateT p (s - 1)
+            else
+                Identity (s, s))
 ```
-The effectful operations `get` and `put` and the (unused) reader effects are all evaluated away. The code does have an unnecessary pattern matching `(a_aSEL, b_aSEM) -> (a_aSEL, b_aSEM)` but GHC can optimise this out (and we can tweak the handler a bit to avoid generating this pattern matching).
+  The effectful operations `get` and `put` and the (unused) reader effects are all evaluated away at compile time.
 
-  Only for `nondet` in `O0`
+  Only for `nondet` and `catch` in `O0`, `effective.fstg` is not the fastest. For `nondet`
+  we believe that this is because `effective.fstg` generates code operating on vanilla lists `[a]`, while faster implementations use CPS-based lists. It is possible to change `effective.fstg` to generate code using CPS-based lists as well. For `catch`, we believe that
+  it is because the generated local is not strict. Otherwise the code looks optimal:
+```haskell
+catchDeep :: Int -> Either () ()
+catchDeep n = runIdentity (runExceptT (p n))
+  where
+    p :: Int -> ExceptT () Identity ()
+    p m = ExceptT
+      (if (m > 0) then
+           case runIdentity (runExceptT (p (m - 1))) of
+             Left a_a6mr -> Identity (Left ())
+             Right b_a6ms -> Identity (Right b_a6ms)
+       else
+           Identity (Left ()))
+```
+  Again, this is not an inherent limitation of `effective.fstg`. it is possible to use a different handler of `local` to make `effective.fstg` generate code that evaluates `m - 1` strictly.
 
-* Lightly staged `effective` (`effective.lstg` in the tables) does not offer consistent performance boost in these tests. This is not surprising because there is no non-trivial handler interaction in these tests, so handler combinators aren't the performance bottleneck.
+* Lightly staged `effective` (`effective.lstg` in the tables) does not offer performance boost in these tests. This is because there is no non-trivial handler interaction in these tests, so handler combinators aren't in any hot path of the tests.
 
 * Non-staged `effective` performs reasonably fast compared to other implementations of effect handlers under both `O0` and `O2`. It is not always the fastest in the shallow tests but it does very well in the deep and very deep tests because of handler fusion and storing algebras as arrays.
 
-* The version of `effective` with the naive encoding of programs and algebras (`effective.naive`) does better than `effective` under `O2` for shallow tests. After inspecting the generated core, we found that it was because GHC was willing to do more inlining for `effective.naive`, while it almost never inlined anything related to arrays.
+* The version of `effective` with the naive encoding of programs and algebras (`effective.naive`) does better than `effective` under `O2` for shallow tests. It is because GHC is willing to do more inlining for `effective.naive`, while it almost never inlines anything related to arrays.
+
+The following are some observations about implementations other than `effective`:
 
 * Because this makes the handler of state no longer tail-resumptive, a noticeable performance drop for the `countdown` from `mp` to `mp.safe` test is observed.

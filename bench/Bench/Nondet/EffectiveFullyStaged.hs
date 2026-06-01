@@ -20,7 +20,7 @@ choose n =
 pyth :: Int -> [(Int, Int, Int)]
 pyth n =
     $$( stage
-            (pushWithUpAT @Identity)
+            (upCache @[] `fuseAT` pushWithUpAT @Identity)
             (Staged.pythGen [|| n ||] [|| choose ||])
       )
 

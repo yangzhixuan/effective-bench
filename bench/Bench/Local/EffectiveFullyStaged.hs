@@ -15,7 +15,8 @@ localBench n = runIdentity (runReaderT (p n) 0)
     p :: Int -> ReaderT Int Identity Int
     p m =
         $$( stage
-                (upReader @Int @Identity `fuseAT` readerAT @(CodeQ Int))
+                (upCache @(ReaderT Int Identity) `fuseAT`
+                 upReader @Int @Identity `fuseAT` readerAT @(CodeQ Int))
                 (Staged.localGen [|| m ||] [|| p ||])
           )
 

@@ -16,7 +16,8 @@ catchBench n = runIdentity (runExceptT (p n))
     p :: Int -> ExceptT () Identity ()
     p m =
         $$( stage
-                (upExcept @() @Identity `fuseAT` exceptAT @(CodeQ ()))
+                (upCache @(ExceptT () Identity) `fuseAT`
+                 upExcept @() @Identity `fuseAT` exceptAT @(CodeQ ()))
                 (Staged.catchGen [|| m ||] [|| p ||])
           )
 

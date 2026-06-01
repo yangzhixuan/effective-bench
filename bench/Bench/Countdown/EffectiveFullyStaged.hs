@@ -17,7 +17,8 @@ countdown n = runIdentity (runStateT p n)
     p :: StateT Int Identity Int
     p =
         $$(stage
-             (upState @Int @Identity `fuseAT` stateAT @(CodeQ Int))
+             (upCache @(StateT Int Identity) `fuseAT`
+              upState @Int @Identity `fuseAT` stateAT @(CodeQ Int))
              (Staged.countdownGen [|| p ||])
           )
 
