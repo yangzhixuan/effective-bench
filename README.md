@@ -15,7 +15,7 @@ The test cases (in `bench/Bench/`) are adapted from the benchmarking suite of [h
 
 4. We separate the libraries into different compilation units to make sure that each of them receives the same amount of simplifier ticks.
 
-5. The handlers for state and reader of `Mp.Eff` internally use `IORef` and `unsafePerformIO` to store the state. So we create a separate test `mp.safe` where state are handled in the usual way as state-passing functions.
+5. The handlers for state and reader of `mp` internally use `IORef` and `unsafePerformIO` to store the state. This technique is applicable to other libraries too, so for a fair comparison we create a separate test `mp.safe` where state is handled in the usual way as state-passing functions.
 
 6. GHC is pinned to 9.10.1 and all libraries are pinned to specific versions in `effective-bench.cabal` for reproducibility. GHC 9.8.4 was also tested. All libraries compile without modification with 9.8.4 but `mp` and `mp.safe` crash at runtime, which should be caused by GHC bugs (since they don't crash with 9.10.1).
 
@@ -48,7 +48,7 @@ All results are generated in the directory `results/`. The raw data are recorded
 Results
 =======
 
-The files in `results/` shipped with this repo were generated on an Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it would be much quicker when deep tests are disabled). The results are shown in this file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf). Among all results, the following two tables are probably the most interesting, showing the average running time relative to the fastest implementation:
+The files in `results/` shipped with this repo were generated on an Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it is much quicker when deep tests are disabled). The results are shown in this file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf). Among all results, the following two tables are probably the most interesting, showing the average running time relative to the fastest implementation:
 
 ![results/o2-time-percent.pdf](results/o2-time-percent.png)
 

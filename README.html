@@ -279,10 +279,11 @@ everything being unoptimised.</p></li>
 <li><p>We separate the libraries into different compilation units to
 make sure that each of them receives the same amount of simplifier
 ticks.</p></li>
-<li><p>The handlers for state and reader of <code>Mp.Eff</code>
-internally use <code>IORef</code> and <code>unsafePerformIO</code> to
-store the state. So we create a separate test <code>mp.safe</code> where
-state are handled in the usual way as state-passing functions.</p></li>
+<li><p>The handlers for state and reader of <code>mp</code> internally
+use <code>IORef</code> and <code>unsafePerformIO</code> to store the
+state. This technique is applicable to other libraries too, so for a
+fair comparison we create a separate test <code>mp.safe</code> where
+state is handled in the usual way as state-passing functions.</p></li>
 <li><p>GHC is pinned to 9.10.1 and all libraries are pinned to specific
 versions in <code>effective-bench.cabal</code> for reproducibility. GHC
 9.8.4 was also tested. All libraries compile without modification with
@@ -330,8 +331,8 @@ tables in a file.</p>
 <p>The files in <code>results/</code> shipped with this repo were
 generated on an Apple M4 laptop with 24GB memory. On this machine, it
 took around 20 minutes to compile the tests and 10 minutes to run the
-tests with the very deep tests enabled (and it would be much quicker
-when deep tests are disabled). The results are shown in this file <a
+tests with the very deep tests enabled (and it is much quicker when deep
+tests are disabled). The results are shown in this file <a
 href="results/benchmark-tables.pdf"><code>results/benchmark-tables.pdf</code></a>.
 Among all results, the following two tables are probably the most
 interesting, showing the average running time relative to the fastest
