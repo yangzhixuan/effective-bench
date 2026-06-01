@@ -94,6 +94,7 @@ def read_results(input_path):
         time_values[(test, library)] = table_value(row["Mean (ps)"], format_microseconds(row["Mean (ps)"]))
         memory_values[(test, library)] = table_value(row["Allocated"], row["Allocated"])
 
+    libraries.sort(key=str.casefold)
     return tests, libraries, time_values, memory_values
 
 def write_table_body(f, tests, libraries, values, format_value):
