@@ -33,7 +33,9 @@ The test cases are mostly adapted from the benchmarking suite of [heftia-effects
         instance (Monad b, MonadBase b m, LastMember m effs) => MonadBase b (Eff effs) where
         ```
 
-   It's not clear to me why GHC 9.10.1 can't see `MonadBase b m` already implies `Monad b`. The patched version is shipped in `vendor/freer-simple-1.2.1.2`.
+       It's not clear to me why GHC 9.10.1 can't see `MonadBase b m` already implies `Monad b`. The patched version is shipped in `vendor/freer-simple-1.2.1.2`.
+
+8. In the deep and very deep tests for `effective`, we use the handler combinator `++>` instead of our usual fusion combinator `|>` because `effective` are designed to work with _effect sets_ that have no duplicated members, but the deep and very deep tests of this benchmark introduce duplicates of reader effects. For a fair comparison, the combinator `++>` is added to `effective`, which _appends_ effects rather than _unions_ effects when fusing two handlers.
 
 The shell script `runbench.sh` runs the benchmarks. The benchmarking framework [`tasty-bench`](https://hackage.haskell.org/package/tasty-bench) automatically runs each test case multiple times for a target relative standard deviation of 5%.
 
