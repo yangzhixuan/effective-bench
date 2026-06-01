@@ -48,14 +48,12 @@ The files in `results/` of this repo were generated on my Apple M4 laptop with 2
 
 The following are some observations about (different ways of using) `effective`:
 
-* Fully staged `effective` (`effective.fstg` in the tables) are the fastest in the majority of the test cases under both `O2` and `O0`. This is not surprising because if we inspect the generated code, it is clear that the code for `effective.fstg` is overhead-free. For example, the code for the `countdown` test is
+* Fully staged `effective` (`effective.fstg` in the tables) are the fastest in the majority of the test cases under both `O2` and `O0`. This is not surprising because if we inspect the generated code, it is clear that the code for `effective.fstg` is overhead-free. For example, the generated code for the `countdown` test (slighted reformatted) is
   ```haskell
   countdownDeep :: Int -> (Int, Int)
   countdownDeep n = runIdentity (runStateT p n) where
-    p =
-      StateT
-        (\ s
-           -> if (s_a5rr > 0) then
+    p = StateT (\ s ->
+              if (s > 0) then
                   runStateT p (s - 1)
               else
                   Identity (s, s))
