@@ -24,8 +24,9 @@ pyth n = handle list (program n)
 pythDeep :: Int -> [(Int, Int, Int)]
 pythDeep n =
     handle
-        (run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> list
-             ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run)
+        (run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> 
+         list ++>
+         run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run ++> run)
         (program n)
   where
     run = asker ()

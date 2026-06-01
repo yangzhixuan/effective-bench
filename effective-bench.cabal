@@ -45,7 +45,8 @@ common bench-common
         -fconstraint-solver-iterations=16
         -freduction-depth=0
         -Wno-partial-type-signatures
-        -dcore-lint
+        -ddump-splices
+        -ddump-to-file
     build-depends:
         base == 4.20.0.0,
         tasty-bench == 0.4.1
@@ -71,7 +72,8 @@ common bench-common-o0
         -fconstraint-solver-iterations=16
         -freduction-depth=0
         -Wno-partial-type-signatures
-        -dcore-lint
+        -ddump-splices
+        -ddump-to-file
     build-depends:
         base == 4.20.0.0,
         tasty-bench == 0.4.1
@@ -226,7 +228,7 @@ benchmark with-o0
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
-    cpp-options:    -DDISABLE_VERY_DEEP
+    -- cpp-options:    -DDISABLE_VERY_DEEP
     -- The group of 'very deep' tests needs a lot of memory to compile and is disabled by default.
     other-modules:
         Bench.Mpeff

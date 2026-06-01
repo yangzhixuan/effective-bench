@@ -43,7 +43,7 @@ pythDeep :: Int -> [(Int, Int, Int)]
 pythDeep n =
     $$( let r = halg (asker ([|| () ||] :: CodeQ ()))
          in stage
-                (pushWithUpAT @Identity `fuseAT`
-                   (r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT`
-                    r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r))
+                (r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT`
+                 pushWithUpAT @Identity `fuseAppAT`
+                 r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r)
                 (Staged.pythGen [|| n ||] [|| choose ||]))
