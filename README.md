@@ -6,7 +6,7 @@ The test cases are mostly adapted from the benchmarking suite of [heftia-effects
 
 1. The test of coroutine is removed because the bottleneck is in the actual computation rather than the effect framework.
 
-  We added a new group of tests called `very.deep` where there are 50 reader effects before and after the effect handler being tested. This group of tests needs a lot of memory to compile so it is disabled by default in `effective-bench.cabal`. The library `fused-effects` is disabled for `very.deep` because it fails in compilation because of running out of simplifier ticks.
+    We added a new group of tests called `very.deep` where there are 50 reader effects before and after the effect handler being tested. This group of tests needs a lot of memory to compile so it is disabled by default in `effective-bench.cabal`. The library `fused-effects` is disabled for `very.deep` because it fails in compilation because of running out of simplifier ticks.
 
 2. Beside the implementations of `effective`, we also add another implementation for hand-rolled monadic code that does not use the `MonadXYZ` type-classes. In the benchmark suite of [heftia-effects](https://hackage.haskell.org/package/heftia), the test cases `catch` and `local` are not implemented for libraries that do not support higher-order effects. We added these tests for all libraries by implementing `catch` and `local` as handlers.
 
@@ -20,16 +20,20 @@ The test cases are mostly adapted from the benchmarking suite of [heftia-effects
 
 7. The library `freer-simple-1.2.1.2` is slightly patched to compile with GHC 9.10.1.
 
-  1. `freer-simple.cabal` is modified to allow the version of `template-haskell` that ships with GHC 9.10.1
-  2. Line 156 of `src/Control/Monad/Freer/Internal.hs` is changed from
-```
-instance (MonadBase b m, LastMember m effs) => MonadBase b (Eff effs) where
-```
-     to
-```
-instance (Monad b, MonadBase b m, LastMember m effs) => MonadBase b (Eff effs) where
-```
-It's not clear to me why GHC 9.10.1 can't see `MonadBase b m` already implies `Monad b`. The patched version is shipped in `vendor/freer-simple-1.2.1.2`.
+    1. `freer-simple.cabal` is modified to allow the version of `template-haskell` that ships with GHC 9.10.1
+
+    2. Line 156 of `src/Control/Monad/Freer/Internal.hs` is changed from
+
+        ```
+        instance (MonadBase b m, LastMember m effs) => MonadBase b (Eff effs) where
+        ```
+        to
+
+        ```
+        instance (Monad b, MonadBase b m, LastMember m effs) => MonadBase b (Eff effs) where
+        ```
+
+   It's not clear to me why GHC 9.10.1 can't see `MonadBase b m` already implies `Monad b`. The patched version is shipped in `vendor/freer-simple-1.2.1.2`.
 
 The shell script `runbench.sh` runs the benchmarks. The benchmarking framework [`tasty-bench`](https://hackage.haskell.org/package/tasty-bench) automatically runs each test case multiple times for a target relative standard deviation of 5%.
 
@@ -38,46 +42,44 @@ All results are generated in the directory `results/`. The raw data are recorded
 Results Analysis
 ================
 
-The files in `results/` of this repo were generated on my Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it would be much quicker when deep tests are disabled). The results are shown in this file ![`results/benchmark-tables.pdf`](results/benchmark-tables.pdf).
+The files in `results/` of this repo were generated on my Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it would be much quicker when deep tests are disabled). The results are shown in this file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf).
 
 **First of all, we emphasise that the results of this experiment do not necessarily generalise to practical scenarios because the testing programs are all small artificial toy programs**. The purpose of this experiment is to check that our implementation of `effective` has the expected performance characteristics, rather than to compare the performance of the different libraries. However, we can still draw some useful conclusions from these small tests.
 
 The following are some observations about (different ways of using) `effective`:
 
 * Fully staged `effective` (`effective.fstg` in the tables) are the fastest in the majority of the test cases under both `O2` and `O0`. This is not surprising because if we inspect the generated code, it is clear that the code for `effective.fstg` is overhead-free. For example, the code for the `countdown` test is
-
-```haskell
-countdownDeep :: Int -> (Int, Int)
-countdownDeep n = runIdentity (runStateT p n) where
-  p =
-    StateT
-      (\ s
-         -> if (s_a5rr > 0) then
-                runStateT p (s - 1)
-            else
-                Identity (s, s))
-```
+  ```haskell
+  countdownDeep :: Int -> (Int, Int)
+  countdownDeep n = runIdentity (runStateT p n) where
+    p =
+      StateT
+        (\ s
+           -> if (s_a5rr > 0) then
+                  runStateT p (s - 1)
+              else
+                  Identity (s, s))
+  ```
   The operations `get` and `put` and the (unused) reader effects are all evaluated away at compile time.
 
-  Only for `nondet` and `catch` in `O0`, `effective.fstg` is not the fastest. For `nondet`
-  we believe that this is because `effective.fstg` generates code operating on vanilla lists `[a]`, while faster implementations use CPS-based lists. It is possible to change `effective.fstg` to generate code using CPS-based lists as well.
+  Only for `nondet` and `catch` in `O0`, `effective.fstg` is not the fastest. For `nondet` we believe that this is because `effective.fstg` generates code operating on vanilla lists `[a]`, while faster implementations use CPS-based lists. It is possible to change `effective.fstg` to generate code using CPS-based lists as well.
 
   For `catch`, we are not sure why `effective.fstg` isn't the fastest even when the generated code looks optimal:
-```haskell
-catchDeep :: Int -> Either () ()
-catchDeep n = runIdentity (runExceptT (p n))
-  where
-    p :: Int -> ExceptT () Identity ()
-    p m = ExceptT
-      (if (m > 0) then
-           case runIdentity (runExceptT (p (m - 1))) of
-             Left a_a6mr -> Identity (Left ())
-             Right b_a6ms -> Identity (Right b_a6ms)
-       else
-           Identity (Left ()))
-```
-  It might be because `m - 1` (generated by the the local operation) is not strict. Again, this is not an inherent limitation of `effective.fstg`. it is possible to use a different handler of `local` to make `effective.fstg` generate code that evaluates `m - 1` strictly.
-
+  ```haskell
+  catchDeep :: Int -> Either () ()
+  catchDeep n = runIdentity (runExceptT (p n))
+    where
+      p :: Int -> ExceptT () Identity ()
+      p m = ExceptT
+        (if (m > 0) then
+             case runIdentity (runExceptT (p (m - 1))) of
+               Left a_a6mr -> Identity (Left ())
+               Right b_a6ms -> Identity (Right b_a6ms)
+         else
+             Identity (Left ()))
+  ```
+    It might be because `m - 1` (generated by the the local operation) is not strict. Again, this is not an inherent limitation of `effective.fstg`. it is possible to use a different handler of `local` to make `effective.fstg` generate code that evaluates `m - 1` strictly.
+  
 * Lightly staged `effective` (`effective.lstg` in the tables) does not offer performance boost in these tests. This is because there is no non-trivial handler interaction in these tests, so handler combinators aren't in any hot path of the tests.
 
 * Non-staged `effective` performs reasonably fast compared to other implementations of effect handlers under both `O0` and `O2`. It is not always the fastest in the shallow tests but it does very well in the deep and very deep tests because of handler fusion and storing algebras as arrays.
