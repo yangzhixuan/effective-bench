@@ -40,16 +40,24 @@ In the deep and very deep tests for `effective`, we use the handler combinator `
 
 The shell script `runbench.sh` runs the benchmarks. The benchmarking framework [`tasty-bench`](https://hackage.haskell.org/package/tasty-bench) automatically runs each test case multiple times for a target relative standard deviation of 5%.
 
-All results are generated in the directory `results/`. The raw data are recorded in `o0-results.csv` and `o2-results.csv`. The script also generates some `pdf` files (using LaTeX) for showing the results more nicely. The file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf) contains all results.
+All results are generated in the directory `results/`. The raw data are recorded in `o0-results.csv` and `o2-results.csv`. The script also generates some `pdf` files (using LaTeX) for showing the results more nicely. The file `results/benchmark-tables.pdf` collects all tables in a file.
 
 Results and Analysis
 ====================
 
-The files in `results/` of this repo were generated on an Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it would be much quicker when deep tests are disabled). The results are shown in this file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf). Among all results, the following the two tables are probably the most interesting, showing the average running time relative to the fastest implementation:
+The files in `results/` of this repo were generated on an Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it would be much quicker when deep tests are disabled). The results are shown in this file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf). Among all results, the following two tables are probably the most interesting, showing the average running time relative to the fastest implementation:
 
 ![results/o2-time-percent.pdf](results/o2-time-percent.png)
 
 ![results/o0-time-percent.pdf](results/o0-time-percent.png)
+
+The dashed entries are due to the following reasons:
+
+* `effectful` doesn't support multi-shot handlers so it doesn't have result for `nondet`.
+
+* `effective.lstg` (`effective` with light staging) doesn't have results for shallow tests because it is exactly the same as non-staged `effective`.
+
+* `handrolled.listt` and `mtl.listt` only have results for `nondet` because they have exactly the same results as `handrolled.logict` and `mtl.logict` for tests that do not involve nondeterminism.
 
 **First of all, we emphasise that the results of this experiment do not necessarily generalise to practical scenarios because the testing programs are all small artificial toy programs, and the comparison between the implementations is not strictly an apples-to-apples comparison because the libraries do not implement exactly the same API.** For example, `mp` and `freer` are not libraries designed for higher-order operations, so we implement `catch` and `local` as handlers rather than re-interpretable operations for them, which gives certain advantages in these tests.
 

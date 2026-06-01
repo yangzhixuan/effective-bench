@@ -323,9 +323,8 @@ standard deviation of 5%.</p>
 raw data are recorded in <code>o0-results.csv</code> and
 <code>o2-results.csv</code>. The script also generates some
 <code>pdf</code> files (using LaTeX) for showing the results more
-nicely. The file <a
-href="results/benchmark-tables.pdf"><code>results/benchmark-tables.pdf</code></a>
-contains all results.</p>
+nicely. The file <code>results/benchmark-tables.pdf</code> collects all
+tables in a file.</p>
 <h1 id="results-and-analysis">Results and Analysis</h1>
 <p>The files in <code>results/</code> of this repo were generated on an
 Apple M4 laptop with 24GB memory. On this machine, it took around 20
@@ -333,7 +332,7 @@ minutes to compile the tests and 10 minutes to run the tests with the
 very deep tests enabled (and it would be much quicker when deep tests
 are disabled). The results are shown in this file <a
 href="results/benchmark-tables.pdf"><code>results/benchmark-tables.pdf</code></a>.
-Among all results, the following the two tables are probably the most
+Among all results, the following two tables are probably the most
 interesting, showing the average running time relative to the fastest
 implementation:</p>
 <figure>
@@ -346,6 +345,18 @@ alt="results/o2-time-percent.pdf" />
 alt="results/o0-time-percent.pdf" />
 <figcaption aria-hidden="true">results/o0-time-percent.pdf</figcaption>
 </figure>
+<p>The dashed entries are due to the following reasons:</p>
+<ul>
+<li><p><code>effectful</code> doesn’t support multi-shot handlers so it
+doesn’t have result for <code>nondet</code>.</p></li>
+<li><p><code>effective.lstg</code> (<code>effective</code> with light
+staging) doesn’t have results for shallow tests because it is exactly
+the same as non-staged <code>effective</code>.</p></li>
+<li><p><code>handrolled.listt</code> and <code>mtl.listt</code> only
+have results for <code>nondet</code> because they have exactly the same
+results as <code>handrolled.logict</code> and <code>mtl.logict</code>
+for tests that do not involve nondeterminism.</p></li>
+</ul>
 <p><strong>First of all, we emphasise that the results of this
 experiment do not necessarily generalise to practical scenarios because
 the testing programs are all small artificial toy programs, and the
