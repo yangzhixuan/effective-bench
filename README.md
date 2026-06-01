@@ -35,7 +35,7 @@ The test cases are mostly adapted from the benchmarking suite of [heftia-effects
 
        It's not clear to me why GHC 9.10.1 can't see `MonadBase b m` already implies `Monad b`. The patched version is shipped in `vendor/freer-simple-1.2.1.2`.
 
-8. In the deep and very deep tests for `effective`, we use the handler combinator `++>` instead of our usual fusion combinator `|>` because `effective` are designed to work with _effect sets_ that have no duplicated members, but the deep and very deep tests of this benchmark introduce duplicates of reader effects. For a fair comparison, the combinator `++>` is added to `effective`, which _appends_ effects rather than _unions_ effects when fusing two handlers.
+8. In the deep and very deep tests for `effective`, we use the handler combinator `++>` instead of our usual fusion combinator `|>` because `effective` is designed to work with _effect sets_ that have no duplicated members, but the deep and very deep tests of this benchmark introduce duplicates of reader effects. For a fair comparison, the combinator `++>` is added to `effective`, which _appends_ effects rather than _unions_ effects when fusing two handlers.
 
 The shell script `runbench.sh` runs the benchmarks. The benchmarking framework [`tasty-bench`](https://hackage.haskell.org/package/tasty-bench) automatically runs each test case multiple times for a target relative standard deviation of 5%.
 
@@ -44,9 +44,9 @@ All results are generated in the directory `results/`. The raw data are recorded
 Results and Analysis
 ====================
 
-The files in `results/` of this repo were generated on my Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it would be much quicker when deep tests are disabled). The results are shown in this file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf), and the following are the two tables for average time (relative to the fastest implementation):
-![results/o2-time-percent.pdf](results/o0-time-percent.png)
-![results/o0-time-percent.pdf](results/o2-time-percent.png)
+The files in `results/` of this repo were generated on an Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it would be much quicker when deep tests are disabled). The results are shown in this file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf), and the following are the two tables for average time (relative to the fastest implementation):
+![results/o2-time-percent.pdf](results/o2-time-percent.png)
+![results/o0-time-percent.pdf](results/o0-time-percent.png)
 
 
 **First of all, we emphasise that the results of this experiment do not necessarily generalise to practical scenarios because the testing programs are all small artificial toy programs, and the comparison between the implementations is not strictly an apples-to-apples comparison because the libraries do not implement exactly the same API.** For example, `mp` and `freer` are not libraries designed for higher-order operations, so we implement `catch` and `local` as handlers rather than re-interpretable operations for them, which gives certain advantages in these tests.
