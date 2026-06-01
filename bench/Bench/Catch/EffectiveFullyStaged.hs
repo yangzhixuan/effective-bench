@@ -48,7 +48,8 @@ catchDeep n = runIdentity (runExceptT (p n))
     p m =
         $$(let r = halg (asker ([|| () ||] :: CodeQ ()))
            in stage
-               (upExcept @() @Identity `fuseAT`
+               (upCache @(ExceptT () Identity) `fuseAT`
+                upExcept @() @Identity `fuseAT`
                   (r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT`
                       exceptAT @(CodeQ ()) `fuseAppAT`
                    r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r))

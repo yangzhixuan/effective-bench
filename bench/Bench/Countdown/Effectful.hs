@@ -16,4 +16,3 @@ countdownDeep :: Int -> (Int, Int)
 countdownDeep n = EL.runPureEff $ runR $ runR $ runR $ runR $ runR $ EL.runStateLocal n $ runR $ runR $ runR $ runR $ runR $ program
   where
     runR = EL.runReader ()
-

@@ -49,7 +49,8 @@ countdownDeep n = runIdentity (runStateT p n)
     p :: StateT Int Identity Int
     p = $$(let r = halg (asker ([|| () ||] :: CodeQ ()))
            in stage
-                (upState @Int @Identity `fuseAT`
+                (upCache @(StateT Int Identity) `fuseAT`
+                 upState @Int @Identity `fuseAT`
                    (r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT`
                        stateAT @(CodeQ Int) `fuseAppAT`
                     r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r))

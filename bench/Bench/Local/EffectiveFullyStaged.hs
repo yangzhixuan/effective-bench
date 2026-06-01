@@ -46,7 +46,8 @@ localDeep n = runIdentity (runReaderT (p n) 0)
     p m =
         $$(let r = halg (asker ([|| () ||] :: CodeQ ()))
            in stage
-                (upReader @Int @Identity `fuseAT`
+                (upCache @(ReaderT Int Identity) `fuseAT`
+                 upReader @Int @Identity `fuseAT`
                    (r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT`
                        readerAT @(CodeQ Int) `fuseAppAT`
                     r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r `fuseAppAT` r))
