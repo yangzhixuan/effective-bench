@@ -138,7 +138,7 @@ benchmark with-o2
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
- -- cpp-options:    -DDISABLE_VERY_DEEP
+    cpp-options:    -DDISABLE_VERY_DEEP
     cpp-options:    -DBENCH_O2
     -- The group of 'very deep' tests needs a lot of memory to compile and is disabled by default.
     other-modules:
@@ -270,7 +270,7 @@ benchmark with-o0
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
-    -- cpp-options:    -DDISABLE_VERY_DEEP
+    cpp-options:    -DDISABLE_VERY_DEEP
     -- The group of 'very deep' tests needs a lot of memory to compile and is disabled by default.
     other-modules:
         Bench.Mpeff
