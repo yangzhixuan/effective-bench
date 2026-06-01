@@ -241,8 +241,13 @@
 <p>This benchmark suite is for evaluating the runtime performance of the
 <a
 href="https://github.com/zenzike/effective"><code>effective</code></a>
-library. The test cases are mostly adapted from the benchmarking suite
-of <a
+library. The following Haskell effect libraries are also benchmarked for
+comparison: <code>eff</code>, <code>effectful</code>,
+<code>freer-simple</code>, <code>fused-effects</code>,
+<code>mpeff</code>, <code>heftia</code>, and <code>MTL</code> (with
+<code>LogicT</code> or <code>ListT</code> for nondeterminism).</p>
+<p>The test cases (in <code>bench/Bench/</code>) are adapted from the
+benchmarking suite of <a
 href="https://hackage.haskell.org/package/heftia">heftia-effects</a>
 with the following modifications:</p>
 <ol type="1">
@@ -299,16 +304,16 @@ changed from</p>
 patched version is shipped in
 <code>vendor/freer-simple-1.2.1.2</code>.</p></li>
 </ol></li>
-<li><p>In the deep and very deep tests for <code>effective</code>, we
-use the handler combinator <code>++&gt;</code> instead of our usual
-fusion combinator <code>|&gt;</code> because <code>effective</code> is
-designed to work with <em>effect sets</em> that have no duplicated
-members, but the deep and very deep tests of this benchmark introduce
-duplicates of reader effects. For a fair comparison, the combinator
+</ol>
+<p>In the deep and very deep tests for <code>effective</code>, we use
+the handler combinator <code>++&gt;</code> instead of our usual fusion
+combinator <code>|&gt;</code> because <code>effective</code> is designed
+to work with <em>effect sets</em> that have no duplicated members, but
+the deep and very deep tests of this benchmark introduce duplicates of
+reader effects. For a fair comparison, the combinator
 <code>++&gt;</code> is added to <code>effective</code>, which
 <em>appends</em> effects rather than <em>unions</em> effects when fusing
-two handlers.</p></li>
-</ol>
+two handlers.</p>
 <p>The shell script <code>runbench.sh</code> runs the benchmarks. The
 benchmarking framework <a
 href="https://hackage.haskell.org/package/tasty-bench"><code>tasty-bench</code></a>
@@ -327,12 +332,20 @@ Apple M4 laptop with 24GB memory. On this machine, it took around 20
 minutes to compile the tests and 10 minutes to run the tests with the
 very deep tests enabled (and it would be much quicker when deep tests
 are disabled). The results are shown in this file <a
-href="results/benchmark-tables.pdf"><code>results/benchmark-tables.pdf</code></a>,
-and the following are the two tables for average time (relative to the
-fastest implementation): <img src="results/o2-time-percent.png"
-alt="results/o2-time-percent.pdf" /> <img
-src="results/o0-time-percent.png"
-alt="results/o0-time-percent.pdf" /></p>
+href="results/benchmark-tables.pdf"><code>results/benchmark-tables.pdf</code></a>.
+Among all results, the following the two tables are probably the most
+interesting, showing the average running time relative to the fastest
+implementation:</p>
+<figure>
+<img src="results/o2-time-percent.png"
+alt="results/o2-time-percent.pdf" />
+<figcaption aria-hidden="true">results/o2-time-percent.pdf</figcaption>
+</figure>
+<figure>
+<img src="results/o0-time-percent.png"
+alt="results/o0-time-percent.pdf" />
+<figcaption aria-hidden="true">results/o0-time-percent.pdf</figcaption>
+</figure>
 <p><strong>First of all, we emphasise that the results of this
 experiment do not necessarily generalise to practical scenarios because
 the testing programs are all small artificial toy programs, and the
@@ -430,7 +443,8 @@ GHC for very deep tests.</p></li>
 another implementation that is consistently unaffected by adding layers
 of reader effects. This is because the monad of <code>effectful</code>
 is simply a reader monad
-<code>newtype Eff es a = Eff (Env es -&gt; IO a)</code>.</p></li>
+<code>newtype Eff es a = Eff (Env es -&gt; IO a)</code> (as a result it
+does not support the effect of nondeterminism).</p></li>
 <li><p>In the tests <code>local</code> and <code>catch</code>,
 <code>freer</code> and <code>mp</code> are unaffected by adding layers
 of reader effects because <code>local</code> and <code>catch</code> are
