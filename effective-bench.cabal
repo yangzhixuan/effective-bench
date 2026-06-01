@@ -137,7 +137,7 @@ benchmark with-o2
     hs-source-dirs: bench
     main-is:        Main.hs
     cpp-options:    -DDISABLE_VERY_DEEP
-    -- If your machine has really a lot of memory you can try removing `-DDISABLE_VERY_DEEP`.
+    -- The group of 'very deep' tests needs a lot of memory to compile and is disabled by default.
     other-modules:
         Bench.Mpeff
         Bench.Catch.VeryDeep.Effective
@@ -227,7 +227,7 @@ benchmark with-o0
     hs-source-dirs: bench
     main-is:        Main.hs
     cpp-options:    -DDISABLE_VERY_DEEP
-    -- If your machine has really a lot of memory you can try removing `-DDISABLE_VERY_DEEP`.
+    -- The group of 'very deep' tests needs a lot of memory to compile and is disabled by default.
     other-modules:
         Bench.Mpeff
         Bench.Catch.VeryDeep.Effective
