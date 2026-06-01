@@ -1,7 +1,7 @@
 Experiment Setup
 ================
 
-This benchmark suite is for evaluating the runtime performance of the [`effective`](https://github.com/zenzike/effective) library. The following Haskell effect libraries are also benchmarked for comparison: `eff`, `effectful`, `freer-simple`, `fused-effects`, `mpeff`, `heftia`, and `MTL` (with `LogicT` or `ListT` for nondeterminism).
+This benchmark suite is for evaluating the runtime performance of the [`effective`](https://example.invalid/anonymous/effective) library. The following Haskell effect libraries are also benchmarked for comparison: `eff`, `effectful`, `freer-simple`, `fused-effects`, `mpeff`, `heftia`, and `MTL` (with `LogicT` or `ListT` for nondeterminism).
 
 The test cases (in `bench/Bench/`) are adapted from the benchmarking suite of [heftia-effects](https://hackage.haskell.org/package/heftia) with the following modifications:
 

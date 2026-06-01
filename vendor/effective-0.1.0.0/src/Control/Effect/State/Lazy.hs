@@ -1,0 +1,68 @@
+{-|
+Module      : Control.Effect.State.Lazy
+Description : Effects for the lazy state monad
+License     : BSD-3-Clause
+Maintainer  : Anonymous Author B
+Stability   : experimental
+-}
+
+{-# LANGUAGE LambdaCase #-}
+
+module Control.Effect.State.Lazy
+  ( -- * Syntax
+    module Control.Effect.State.Type,
+
+    -- * Semantics
+    -- ** Handlers
+    state, state_,
+    stateC, stateC_,
+
+    -- ** Algebras
+    stateAT,
+
+    -- ** Re-export the carrier
+    Lazy.StateT(..),
+  ) where
+
+import Control.Effect
+import Control.Effect.State.Type
+import Control.Effect.Family.Algebraic
+
+import qualified Control.Monad.Trans.State.Lazy as Lazy
+
+-- | The `state` handler deals with stateful operations and
+-- returns the final state @s@.
+state :: s -> Handler [Put s, Get s] '[] '[Lazy.StateT s] a (s, a)
+state s = Handler (stateRun s) stateAT
+
+-- | The `state_` handler deals with stateful operations and silenty
+-- discards the final state.
+state_ :: s -> Handler [Put s, Get s] '[] '[Lazy.StateT s] a a
+state_ s = Handler (runner' $ flip Lazy.evalStateT s) stateAT
+
+-- | An algebra transformer that interprets t'Get' and t'Put' using the lazy t'Lazy.StateT'.
+stateAT :: AlgTrans [Put s, Get s] '[] '[Lazy.StateT s] Monad
+stateAT = algTrans' $ putAlg :#. getAlg
+
+{-# INLINE putAlg #-}
+putAlg :: Monad m => Put s f b -> Lazy.StateT s m b
+putAlg (Put s p) = do Lazy.put s; return p
+
+{-# INLINE getAlg #-}
+getAlg :: Monad m => Get s f b -> Lazy.StateT s m b
+getAlg (Get p) = do s <- Lazy.get; return (p s)
+
+-- Handlers for lightweight staging
+
+stateRun :: s -> Runner '[] '[Lazy.StateT s] a (s, a) Monad
+stateRun s = runner' $ fmap (\ ~(x, y) -> (y, x)) . flip Lazy.runStateT s
+
+stateC :: CodeQ s -> HandlerC [Put s, Get s] '[] '[Lazy.StateT s] a (s, a)
+stateC cs = HandlerC
+  (RunnerC $ \_ -> [|| fmap (\ ~(x, y) -> (y, x)) . flip Lazy.runStateT $$cs ||])
+  (AlgTransC $ \_ -> [|| NT $ putAlg ||] :#$ [|| NT $ getAlg ||] :#$ EndAC)
+
+stateC_ :: CodeQ s -> HandlerC [Put s, Get s] '[] '[Lazy.StateT s] a a
+stateC_ cs = HandlerC
+  (RunnerC $ \_ -> [|| flip Lazy.evalStateT $$cs ||])
+  (AlgTransC $ \_ -> [|| NT $ putAlg ||] :#$ [|| NT $ getAlg ||] :#$ EndAC)
