@@ -41,10 +41,13 @@ The shell script `runbench.sh` runs the benchmarks. The benchmarking framework [
 
 All results are generated in the directory `results/`. The raw data are recorded in `o0-results.csv` and `o2-results.csv`. The script also generates some `pdf` files (using LaTeX) for showing the results more nicely. The file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf) contains all results.
 
-Results Analysis
-================
+Results and Analysis
+====================
 
-The files in `results/` of this repo were generated on my Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it would be much quicker when deep tests are disabled). The results are shown in this file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf).
+The files in `results/` of this repo were generated on my Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it would be much quicker when deep tests are disabled). The results are shown in this file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf), and the following are the two tables for average time (relative to the fastest implementation):
+![results/o2-time-percent.pdf](results/o0-time-percent.png)
+![results/o0-time-percent.pdf](results/o2-time-percent.png)
+
 
 **First of all, we emphasise that the results of this experiment do not necessarily generalise to practical scenarios because the testing programs are all small artificial toy programs, and the comparison between the implementations is not strictly an apples-to-apples comparison because the libraries do not implement exactly the same API.** For example, `mp` and `freer` are not libraries designed for higher-order operations, so we implement `catch` and `local` as handlers rather than re-interpretable operations for them, which gives certain advantages in these tests.
 
