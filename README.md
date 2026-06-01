@@ -1,8 +1,9 @@
 Experiment Setup
 ================
 
-This benchmark suite is for evaluating the runtime performance of the [`effective`](https://github.com/zenzike/effective) library.
-The test cases are mostly adapted from the benchmarking suite of [heftia-effects](https://hackage.haskell.org/package/heftia) with the following modifications:
+This benchmark suite is for evaluating the runtime performance of the [`effective`](https://github.com/zenzike/effective) library. The following Haskell effect libraries are also benchmarked for comparison: `eff`, `effectful`, `freer-simple`, `fused-effects`, `mpeff`, `heftia`, and `MTL` (with `LogicT` or `ListT` for nondeterminism).
+
+The test cases (in `bench/Bench/`) are adapted from the benchmarking suite of [heftia-effects](https://hackage.haskell.org/package/heftia) with the following modifications:
 
 1. The test of coroutine is removed because the bottleneck is in the actual computation rather than the effect framework.
 
@@ -35,7 +36,7 @@ The test cases are mostly adapted from the benchmarking suite of [heftia-effects
 
        It's not clear to me why GHC 9.10.1 can't see `MonadBase b m` already implies `Monad b`. The patched version is shipped in `vendor/freer-simple-1.2.1.2`.
 
-8. In the deep and very deep tests for `effective`, we use the handler combinator `++>` instead of our usual fusion combinator `|>` because `effective` is designed to work with _effect sets_ that have no duplicated members, but the deep and very deep tests of this benchmark introduce duplicates of reader effects. For a fair comparison, the combinator `++>` is added to `effective`, which _appends_ effects rather than _unions_ effects when fusing two handlers.
+In the deep and very deep tests for `effective`, we use the handler combinator `++>` instead of our usual fusion combinator `|>` because `effective` is designed to work with _effect sets_ that have no duplicated members, but the deep and very deep tests of this benchmark introduce duplicates of reader effects. For a fair comparison, the combinator `++>` is added to `effective`, which _appends_ effects rather than _unions_ effects when fusing two handlers.
 
 The shell script `runbench.sh` runs the benchmarks. The benchmarking framework [`tasty-bench`](https://hackage.haskell.org/package/tasty-bench) automatically runs each test case multiple times for a target relative standard deviation of 5%.
 
@@ -44,10 +45,11 @@ All results are generated in the directory `results/`. The raw data are recorded
 Results and Analysis
 ====================
 
-The files in `results/` of this repo were generated on an Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it would be much quicker when deep tests are disabled). The results are shown in this file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf), and the following are the two tables for average time (relative to the fastest implementation):
-![results/o2-time-percent.pdf](results/o2-time-percent.png)
-![results/o0-time-percent.pdf](results/o0-time-percent.png)
+The files in `results/` of this repo were generated on an Apple M4 laptop with 24GB memory. On this machine, it took around 20 minutes to compile the tests and 10 minutes to run the tests with the very deep tests enabled (and it would be much quicker when deep tests are disabled). The results are shown in this file [`results/benchmark-tables.pdf`](results/benchmark-tables.pdf). Among all results, the following the two tables are probably the most interesting, showing the average running time relative to the fastest implementation:
 
+![results/o2-time-percent.pdf](results/o2-time-percent.png)
+
+![results/o0-time-percent.pdf](results/o0-time-percent.png)
 
 **First of all, we emphasise that the results of this experiment do not necessarily generalise to practical scenarios because the testing programs are all small artificial toy programs, and the comparison between the implementations is not strictly an apples-to-apples comparison because the libraries do not implement exactly the same API.** For example, `mp` and `freer` are not libraries designed for higher-order operations, so we implement `catch` and `local` as handlers rather than re-interpretable operations for them, which gives certain advantages in these tests.
 
@@ -97,7 +99,7 @@ The following are some additional remarks about implementations other than `effe
 
 * The performance of `fused-effects` is similar to `MTL`: when inlining happens it is very fast, otherwise it is very slow. However, `fused-effects` is less inlining-friendly compared to `MTL`. It even exhausts the simplifier ticks of GHC for very deep tests.
 
-* Apart from our `effective`, `effectful` is another implementation that is consistently unaffected by adding layers of reader effects. This is because the monad of `effectful` is simply a reader monad `newtype Eff es a = Eff (Env es -> IO a)`.
+* Apart from our `effective`, `effectful` is another implementation that is consistently unaffected by adding layers of reader effects. This is because the monad of `effectful` is simply a reader monad `newtype Eff es a = Eff (Env es -> IO a)` (as a result it does not support the effect of nondeterminism).
 
 * In the tests `local` and `catch`, `freer` and `mp` are unaffected by adding layers of reader effects because `local` and `catch` are implemented as handlers rather than re-interpretable (higher-order) operations for `freer` and `mp`. Therefore when the reader handlers get to handle the program, the program has already been processed into a single-operation program. Thus the layers of reader handlers hardly affect the performance. But in the tests `countdown` and `nondet` we can see that adding layers of reader effects does affect the performance of `mp` and `freer` linearly.
 
