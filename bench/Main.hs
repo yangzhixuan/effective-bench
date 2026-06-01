@@ -59,22 +59,71 @@ import Bench.Nondet.MtlLogict qualified as NondetLogict
 import Bench.Nondet.Polysemy qualified as NondetPolysemy
 
 #ifndef DISABLE_VERY_DEEP
+import Bench.Catch.VeryDeep.Eff qualified as CatchVeryEff
+import Bench.Catch.VeryDeep.Effectful qualified as CatchVeryEffectful
 import Bench.Catch.VeryDeep.Effective qualified as CatchVeryEffective
 import Bench.Catch.VeryDeep.EffectiveFullyStaged qualified as CatchVeryEffectiveFullyStaged
+import Bench.Catch.VeryDeep.EffectiveLightlyStaged qualified as CatchVeryEffectiveLightlyStaged
+import Bench.Catch.VeryDeep.EffectiveNaive qualified as CatchVeryEffectiveNaive
 import Bench.Catch.VeryDeep.FreerSimple qualified as CatchVeryFreer
+#ifndef BENCH_O2
+import Bench.Catch.VeryDeep.FusedEffects qualified as CatchVeryFused
+#endif
+import Bench.Catch.VeryDeep.Handrolled qualified as CatchVeryHandrolled
+import Bench.Catch.VeryDeep.Heftia qualified as CatchVeryHeftia
+import Bench.Catch.VeryDeep.Mpeff.Safe qualified as CatchVeryMpeffSafe
+import Bench.Catch.VeryDeep.Mpeff.Unsafe qualified as CatchVeryMpeff
 import Bench.Catch.VeryDeep.Mtl qualified as CatchVeryMtl
+import Bench.Catch.VeryDeep.Polysemy qualified as CatchVeryPolysemy
+import Bench.Countdown.VeryDeep.Eff qualified as CountdownVeryEff
+import Bench.Countdown.VeryDeep.Effectful qualified as CountdownVeryEffectful
 import Bench.Countdown.VeryDeep.Effective qualified as CountdownVeryEffective
 import Bench.Countdown.VeryDeep.EffectiveFullyStaged qualified as CountdownVeryEffectiveFullyStaged
+import Bench.Countdown.VeryDeep.EffectiveLightlyStaged qualified as CountdownVeryEffectiveLightlyStaged
+import Bench.Countdown.VeryDeep.EffectiveNaive qualified as CountdownVeryEffectiveNaive
 import Bench.Countdown.VeryDeep.FreerSimple qualified as CountdownVeryFreer
+#ifndef BENCH_O2
+import Bench.Countdown.VeryDeep.FusedEffects qualified as CountdownVeryFused
+#endif
+import Bench.Countdown.VeryDeep.Handrolled qualified as CountdownVeryHandrolled
+import Bench.Countdown.VeryDeep.Heftia qualified as CountdownVeryHeftia
+import Bench.Countdown.VeryDeep.Mpeff.Safe qualified as CountdownVeryMpeffSafe
+import Bench.Countdown.VeryDeep.Mpeff.Unsafe qualified as CountdownVeryMpeff
 import Bench.Countdown.VeryDeep.Mtl qualified as CountdownVeryMtl
+import Bench.Countdown.VeryDeep.Polysemy qualified as CountdownVeryPolysemy
+import Bench.Local.VeryDeep.Eff qualified as LocalVeryEff
+import Bench.Local.VeryDeep.Effectful qualified as LocalVeryEffectful
 import Bench.Local.VeryDeep.Effective qualified as LocalVeryEffective
 import Bench.Local.VeryDeep.EffectiveFullyStaged qualified as LocalVeryEffectiveFullyStaged
+import Bench.Local.VeryDeep.EffectiveLightlyStaged qualified as LocalVeryEffectiveLightlyStaged
+import Bench.Local.VeryDeep.EffectiveNaive qualified as LocalVeryEffectiveNaive
 import Bench.Local.VeryDeep.FreerSimple qualified as LocalVeryFreer
+#ifndef BENCH_O2
+import Bench.Local.VeryDeep.FusedEffects qualified as LocalVeryFused
+#endif
+import Bench.Local.VeryDeep.Handrolled qualified as LocalVeryHandrolled
+import Bench.Local.VeryDeep.Heftia qualified as LocalVeryHeftia
+import Bench.Local.VeryDeep.Mpeff.Safe qualified as LocalVeryMpeffSafe
+import Bench.Local.VeryDeep.Mpeff.Unsafe qualified as LocalVeryMpeff
 import Bench.Local.VeryDeep.Mtl qualified as LocalVeryMtl
+import Bench.Local.VeryDeep.Polysemy qualified as LocalVeryPolysemy
+import Bench.Nondet.VeryDeep.Eff qualified as NondetVeryEff
 import Bench.Nondet.VeryDeep.Effective qualified as NondetVeryEffective
 import Bench.Nondet.VeryDeep.EffectiveFullyStaged qualified as NondetVeryEffectiveFullyStaged
+import Bench.Nondet.VeryDeep.EffectiveLightlyStaged qualified as NondetVeryEffectiveLightlyStaged
+import Bench.Nondet.VeryDeep.EffectiveNaive qualified as NondetVeryEffectiveNaive
 import Bench.Nondet.VeryDeep.FreerSimple qualified as NondetVeryFreer
+#ifndef BENCH_O2
+import Bench.Nondet.VeryDeep.FusedEffects qualified as NondetVeryFused
+#endif
+import Bench.Nondet.VeryDeep.HandrolledListT qualified as NondetVeryHandrolledListT
+import Bench.Nondet.VeryDeep.HandrolledLogicT qualified as NondetVeryHandrolledLogicT
+import Bench.Nondet.VeryDeep.Heftia qualified as NondetVeryHeftia
+import Bench.Nondet.VeryDeep.Mpeff.Safe qualified as NondetVeryMpeffSafe
+import Bench.Nondet.VeryDeep.Mpeff.Unsafe qualified as NondetVeryMpeff
+import Bench.Nondet.VeryDeep.MtlListT qualified as NondetVeryListT
 import Bench.Nondet.VeryDeep.MtlLogict qualified as NondetVeryLogict
+import Bench.Nondet.VeryDeep.Polysemy qualified as NondetVeryPolysemy
 #endif
 import Data.Functor ((<&>))
 import Test.Tasty.Bench
@@ -126,10 +175,22 @@ main =
             [10000] <&> \x ->
                 bgroup
                     (show x)
-                    [ bench "freer" $ nf CountdownVeryFreer.countdownDeep x
+                    [ bench "heftia" $ nf CountdownVeryHeftia.countdownDeep x
+                    , bench "freer" $ nf CountdownVeryFreer.countdownDeep x
+                    , bench "polysemy" $ nf CountdownVeryPolysemy.countdownDeep x
+#ifndef BENCH_O2
+                    , bench "fused" $ nf CountdownVeryFused.countdownDeep x
+#endif
+                    , bench "effectful" $ nf CountdownVeryEffectful.countdownDeep x
+                    , bench "eff" $ nf CountdownVeryEff.countdownDeep x
                     , bench "effective" $ nf CountdownVeryEffective.countdownDeep x
                     , bench "effective.fstg" $ nf CountdownVeryEffectiveFullyStaged.countdownDeep x
+                    , bench "effective.lstg" $ nf CountdownVeryEffectiveLightlyStaged.countdownDeep x
+                    , bench "effective.naive" $ nf CountdownVeryEffectiveNaive.countdownDeep x
+                    , bench "mp" $ nf CountdownVeryMpeff.countdownDeep x
+                    , bench "mp.safe" $ nf CountdownVeryMpeffSafe.countdownDeep x
                     , bench "mtl.logict" $ nf CountdownVeryMtl.countdownDeep x
+                    , bench "handrolled.logict" $ nf CountdownVeryHandrolled.countdownDeep x
                     ]
 #endif
 
@@ -177,10 +238,22 @@ main =
             [10000] <&> \x ->
                 bgroup
                     (show x)
-                    [ bench "freer" $ nf CatchVeryFreer.catchDeep x
+                    [ bench "heftia" $ nf CatchVeryHeftia.catchDeep x
+                    , bench "freer" $ nf CatchVeryFreer.catchDeep x
+                    , bench "polysemy" $ nf CatchVeryPolysemy.catchDeep x
+#ifndef BENCH_O2
+                    , bench "fused" $ nf CatchVeryFused.catchDeep x
+#endif
+                    , bench "effectful" $ nf CatchVeryEffectful.catchDeep x
+                    , bench "eff" $ nf CatchVeryEff.catchDeep x
+                    , bench "mp" $ nf CatchVeryMpeff.catchDeep x
+                    , bench "mp.safe" $ nf CatchVeryMpeffSafe.catchDeep x
                     , bench "mtl.logict" $ nf CatchVeryMtl.catchDeep x
                     , bench "effective" $ nf CatchVeryEffective.catchDeep x
                     , bench "effective.fstg" $ nf CatchVeryEffectiveFullyStaged.catchDeep x
+                    , bench "effective.lstg" $ nf CatchVeryEffectiveLightlyStaged.catchDeep x
+                    , bench "effective.naive" $ nf CatchVeryEffectiveNaive.catchDeep x
+                    , bench "handrolled.logict" $ nf CatchVeryHandrolled.catchDeep x
                     ]
 #endif
 
@@ -228,10 +301,22 @@ main =
             [10000] <&> \x ->
                 bgroup
                     (show x)
-                    [ bench "freer" $ nf LocalVeryFreer.localDeep x
+                    [ bench "heftia" $ nf LocalVeryHeftia.localDeep x
+                    , bench "freer" $ nf LocalVeryFreer.localDeep x
+                    , bench "polysemy" $ nf LocalVeryPolysemy.localDeep x
+#ifndef BENCH_O2
+                    , bench "fused" $ nf LocalVeryFused.localDeep x
+#endif
+                    , bench "effectful" $ nf LocalVeryEffectful.localDeep x
+                    , bench "eff" $ nf LocalVeryEff.localDeep x
                     , bench "effective" $ nf LocalVeryEffective.localDeep x
                     , bench "effective.fstg" $ nf LocalVeryEffectiveFullyStaged.localDeep x
+                    , bench "effective.lstg" $ nf LocalVeryEffectiveLightlyStaged.localDeep x
+                    , bench "effective.naive" $ nf LocalVeryEffectiveNaive.localDeep x
+                    , bench "mp" $ nf LocalVeryMpeff.localDeep x
+                    , bench "mp.safe" $ nf LocalVeryMpeffSafe.localDeep x
                     , bench "mtl.logict" $ nf LocalVeryMtl.localDeep x
+                    , bench "handrolled.logict" $ nf LocalVeryHandrolled.localDeep x
                     ]
 #endif
 
@@ -281,10 +366,23 @@ main =
             [32] <&> \x ->
                 bgroup
                     (show x)
-                    [ bench "freer" $ nf NondetVeryFreer.pythDeep x
+                    [ bench "heftia" $ nf NondetVeryHeftia.pythDeep x
+                    , bench "freer" $ nf NondetVeryFreer.pythDeep x
+                    , bench "polysemy" $ nf NondetVeryPolysemy.pythDeep x
+#ifndef BENCH_O2
+                    , bench "fused" $ nf NondetVeryFused.pythDeep x
+#endif
+                    , bench "eff" $ nf NondetVeryEff.pythDeep x
                     , bench "effective" $ nf NondetVeryEffective.pythDeep x
                     , bench "effective.fstg" $ nf NondetVeryEffectiveFullyStaged.pythDeep x
+                    , bench "effective.lstg" $ nf NondetVeryEffectiveLightlyStaged.pythDeep x
+                    , bench "effective.naive" $ nf NondetVeryEffectiveNaive.pythDeep x
+                    , bench "mp" $ nf NondetVeryMpeff.pythDeep x
+                    , bench "mp.safe" $ nf NondetVeryMpeffSafe.pythDeep x
+                    , bench "mtl.listt" $ nf NondetVeryListT.pythDeep x
                     , bench "mtl.logict" $ nf NondetVeryLogict.pythDeep x
+                    , bench "handrolled.listt" $ nf NondetVeryHandrolledListT.pythDeep x
+                    , bench "handrolled.logict" $ nf NondetVeryHandrolledLogicT.pythDeep x
                     ]
 #endif
         ]

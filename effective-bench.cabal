@@ -138,26 +138,68 @@ benchmark with-o2
     type:           exitcode-stdio-1.0
     hs-source-dirs: bench
     main-is:        Main.hs
-    cpp-options:    -DDISABLE_VERY_DEEP
+ -- cpp-options:    -DDISABLE_VERY_DEEP
+    cpp-options:    -DBENCH_O2
     -- The group of 'very deep' tests needs a lot of memory to compile and is disabled by default.
     other-modules:
         Bench.Mpeff
+        Bench.Catch.VeryDeep.Eff
+        Bench.Catch.VeryDeep.Effectful
         Bench.Catch.VeryDeep.Effective
         Bench.Catch.VeryDeep.EffectiveFullyStaged
+        Bench.Catch.VeryDeep.EffectiveLightlyStaged
+        Bench.Catch.VeryDeep.EffectiveNaive
         Bench.Catch.VeryDeep.FreerSimple
+        -- Bench.Catch.VeryDeep.FusedEffects
+        Bench.Catch.VeryDeep.Handrolled
+        Bench.Catch.VeryDeep.Heftia
+        Bench.Catch.VeryDeep.Mpeff.Safe
+        Bench.Catch.VeryDeep.Mpeff.Unsafe
         Bench.Catch.VeryDeep.Mtl
+        Bench.Catch.VeryDeep.Polysemy
+        Bench.Countdown.VeryDeep.Eff
+        Bench.Countdown.VeryDeep.Effectful
         Bench.Countdown.VeryDeep.Effective
         Bench.Countdown.VeryDeep.EffectiveFullyStaged
+        Bench.Countdown.VeryDeep.EffectiveLightlyStaged
+        Bench.Countdown.VeryDeep.EffectiveNaive
         Bench.Countdown.VeryDeep.FreerSimple
+        -- Bench.Countdown.VeryDeep.FusedEffects
+        Bench.Countdown.VeryDeep.Handrolled
+        Bench.Countdown.VeryDeep.Heftia
+        Bench.Countdown.VeryDeep.Mpeff.Safe
+        Bench.Countdown.VeryDeep.Mpeff.Unsafe
         Bench.Countdown.VeryDeep.Mtl
+        Bench.Countdown.VeryDeep.Polysemy
+        Bench.Local.VeryDeep.Eff
+        Bench.Local.VeryDeep.Effectful
         Bench.Local.VeryDeep.Effective
         Bench.Local.VeryDeep.EffectiveFullyStaged
+        Bench.Local.VeryDeep.EffectiveLightlyStaged
+        Bench.Local.VeryDeep.EffectiveNaive
         Bench.Local.VeryDeep.FreerSimple
+        -- Bench.Local.VeryDeep.FusedEffects
+        Bench.Local.VeryDeep.Handrolled
+        Bench.Local.VeryDeep.Heftia
+        Bench.Local.VeryDeep.Mpeff.Safe
+        Bench.Local.VeryDeep.Mpeff.Unsafe
         Bench.Local.VeryDeep.Mtl
+        Bench.Local.VeryDeep.Polysemy
+        Bench.Nondet.VeryDeep.Eff
         Bench.Nondet.VeryDeep.Effective
         Bench.Nondet.VeryDeep.EffectiveFullyStaged
+        Bench.Nondet.VeryDeep.EffectiveLightlyStaged
+        Bench.Nondet.VeryDeep.EffectiveNaive
         Bench.Nondet.VeryDeep.FreerSimple
+        -- Bench.Nondet.VeryDeep.FusedEffects
+        Bench.Nondet.VeryDeep.HandrolledListT
+        Bench.Nondet.VeryDeep.HandrolledLogicT
+        Bench.Nondet.VeryDeep.Heftia
+        Bench.Nondet.VeryDeep.Mpeff.Safe
+        Bench.Nondet.VeryDeep.Mpeff.Unsafe
+        Bench.Nondet.VeryDeep.MtlListT
         Bench.Nondet.VeryDeep.MtlLogict
+        Bench.Nondet.VeryDeep.Polysemy
         Bench.EffectiveFullyStaged
         --
         Bench.Catch.Eff
@@ -232,22 +274,63 @@ benchmark with-o0
     -- The group of 'very deep' tests needs a lot of memory to compile and is disabled by default.
     other-modules:
         Bench.Mpeff
+        Bench.Catch.VeryDeep.Eff
+        Bench.Catch.VeryDeep.Effectful
         Bench.Catch.VeryDeep.Effective
         Bench.Catch.VeryDeep.EffectiveFullyStaged
+        Bench.Catch.VeryDeep.EffectiveLightlyStaged
+        Bench.Catch.VeryDeep.EffectiveNaive
         Bench.Catch.VeryDeep.FreerSimple
+        Bench.Catch.VeryDeep.FusedEffects
+        Bench.Catch.VeryDeep.Handrolled
+        Bench.Catch.VeryDeep.Heftia
+        Bench.Catch.VeryDeep.Mpeff.Safe
+        Bench.Catch.VeryDeep.Mpeff.Unsafe
         Bench.Catch.VeryDeep.Mtl
+        Bench.Catch.VeryDeep.Polysemy
+        Bench.Countdown.VeryDeep.Eff
+        Bench.Countdown.VeryDeep.Effectful
         Bench.Countdown.VeryDeep.Effective
         Bench.Countdown.VeryDeep.EffectiveFullyStaged
+        Bench.Countdown.VeryDeep.EffectiveLightlyStaged
+        Bench.Countdown.VeryDeep.EffectiveNaive
         Bench.Countdown.VeryDeep.FreerSimple
+        Bench.Countdown.VeryDeep.FusedEffects
+        Bench.Countdown.VeryDeep.Handrolled
+        Bench.Countdown.VeryDeep.Heftia
+        Bench.Countdown.VeryDeep.Mpeff.Safe
+        Bench.Countdown.VeryDeep.Mpeff.Unsafe
         Bench.Countdown.VeryDeep.Mtl
+        Bench.Countdown.VeryDeep.Polysemy
+        Bench.Local.VeryDeep.Eff
+        Bench.Local.VeryDeep.Effectful
         Bench.Local.VeryDeep.Effective
         Bench.Local.VeryDeep.EffectiveFullyStaged
+        Bench.Local.VeryDeep.EffectiveLightlyStaged
+        Bench.Local.VeryDeep.EffectiveNaive
         Bench.Local.VeryDeep.FreerSimple
+        Bench.Local.VeryDeep.FusedEffects
+        Bench.Local.VeryDeep.Handrolled
+        Bench.Local.VeryDeep.Heftia
+        Bench.Local.VeryDeep.Mpeff.Safe
+        Bench.Local.VeryDeep.Mpeff.Unsafe
         Bench.Local.VeryDeep.Mtl
+        Bench.Local.VeryDeep.Polysemy
+        Bench.Nondet.VeryDeep.Eff
         Bench.Nondet.VeryDeep.Effective
         Bench.Nondet.VeryDeep.EffectiveFullyStaged
+        Bench.Nondet.VeryDeep.EffectiveLightlyStaged
+        Bench.Nondet.VeryDeep.EffectiveNaive
         Bench.Nondet.VeryDeep.FreerSimple
+        Bench.Nondet.VeryDeep.FusedEffects
+        Bench.Nondet.VeryDeep.HandrolledListT
+        Bench.Nondet.VeryDeep.HandrolledLogicT
+        Bench.Nondet.VeryDeep.Heftia
+        Bench.Nondet.VeryDeep.Mpeff.Safe
+        Bench.Nondet.VeryDeep.Mpeff.Unsafe
+        Bench.Nondet.VeryDeep.MtlListT
         Bench.Nondet.VeryDeep.MtlLogict
+        Bench.Nondet.VeryDeep.Polysemy
         Bench.EffectiveFullyStaged
         --
         Bench.Catch.Eff
