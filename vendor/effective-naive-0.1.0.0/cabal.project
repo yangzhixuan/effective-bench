@@ -1,0 +1,4 @@
+packages:
+    effective.cabal
+
+tests: True
