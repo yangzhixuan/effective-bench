@@ -43,7 +43,7 @@ How to run
 
 The shell script `runbench.sh` runs the benchmarks. The benchmarking framework [`tasty-bench`](https://hackage.haskell.org/package/tasty-bench) automatically runs each test case multiple times for a target relative standard deviation of 5%.
 
-All results are generated in the directory `results/`. The raw data are recorded in `o0-results.csv` and `o2-results.csv`. The script also generates some `pdf` files (using LaTeX) for showing the results more nicely. The file `results/benchmark-tables.pdf` collects all tables in a file.
+All results are generated in the directory `results/`. The raw data are recorded in `o0-results.csv` and `o2-results.csv`. The file `results/benchmark-tables.pdf` shows the data in a more readable way.
 
 Results
 =======
