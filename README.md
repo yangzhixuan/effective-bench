@@ -25,13 +25,15 @@ The test cases (in `bench/Bench/`) are adapted from the benchmarking suite of [h
 
     2. Line 156 of `src/Control/Monad/Freer/Internal.hs` is changed from
 
-        ```
-        instance (MonadBase b m, LastMember m effs) => MonadBase b (Eff effs) where
+        ```haskell
+        instance (MonadBase b m, LastMember m effs) 
+          => MonadBase b (Eff effs) where
         ```
         to
 
-        ```
-        instance (Monad b, MonadBase b m, LastMember m effs) => MonadBase b (Eff effs) where
+        ```haskell
+        instance (Monad b, MonadBase b m, LastMember m effs) 
+          => MonadBase b (Eff effs) where
         ```
 
        It's not clear to me why GHC 9.10.1 can't see `MonadBase b m` already implies `Monad b`. The patched version is shipped in `vendor/freer-simple-1.2.1.2`.
@@ -86,7 +88,8 @@ The following are some observations about (different ways of using) `effective`:
   Only for `nondet` and `catch` in `O0`, `effective.fstg` is not the fastest. For `nondet` we believe that this is because `effective.fstg` generates code operating on vanilla lists `[a]`, while faster implementations use CPS-based lists. It is possible to change `effective.fstg` to generate code using CPS-based lists as well.
 
   For `catch`, we are not sure why `effective.fstg` is slightly slower than `mtl` or `freer` under `O0` while the generated code looks already optimal:
-  ```haskell catchDeep :: Int -> Either () ()
+  ```haskell
+  catchDeep :: Int -> Either () ()
   catchDeep n = runIdentity (runExceptT (p n))
     where
       p :: Int -> ExceptT () Identity ()
