@@ -6,3 +6,4 @@ dist-newstyle
 results/*.log
 results/*.fls
 results/tmp
+.DS_Store
